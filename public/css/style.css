@@ -1,0 +1,27 @@
+body {
+    font-family: '微軟正黑體';
+}
+
+.font-style {
+    font-family: '微軟正黑體' !important;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.cycuvote-theme {
+    background-color: #2E7866 !important;
+}
+
+.cycuvote-menu {
+    height: 50px;
+}
+
+.cycuvote-container {
+    margin-top: 65px !important;
+}
+
+.pointer {
+    cursor: pointer;
+}

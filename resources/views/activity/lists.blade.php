@@ -1,0 +1,107 @@
+@extends('layout.main') @section('content')
+
+<div class="ui grid cycuvote-container">
+
+    <div class="sixteen wide column">
+
+        <div class="ui stackable three column grid example-2">
+
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 29</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar/large/elliot.jpg"> 106 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3874110/the-night-king-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 1</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar2/large/kristy.png"> 105 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3874525/walk-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 10</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar2/large/matthew.png"> 104 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3873033/fuel-cantina-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 3</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar2/large/molly.png"> 103 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3872850/homework-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 71</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar/large/elliot.jpg"> 102 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3867965/animated-paper-shuttle-launch-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column pointer" v-on:click="greet">
+                <div class="ui cards stackable">
+                    <div class="card">
+                        <div class="content">
+                            <div class="right floated meta"><i class="comment icon"></i> 52</div>
+                            <img class="ui avatar image" src="https://semantic-ui.com/images/avatar2/large/kristy.png"> 101 資管專題競賽
+                        </div>
+                        <div class="image">
+                            <img src="https://static.collectui.com/shots/3867574/mystic-castle-detail-large">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    var example2 = new Vue({
+        el: '.example-2',
+        data: {
+            name: 'Vue.js'
+        },
+        // define methods under the `methods` object
+        methods: {
+            greet: function(event) {
+                window.location.href = 'activity/1';
+            }
+        }
+    })
+</script>
+
+@endsection()
