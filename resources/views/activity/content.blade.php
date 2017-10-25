@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="ui bottom black attached button font-style">投給他</div>
+        <div class="ui bottom black attached button font-style" id="voting">投給他</div>
     </div>
     <div class="nine wide column">
         <div class="ui piled segment">
@@ -49,5 +49,30 @@
         </div>
     </div>
 </div>
+
+<div class="ui basic modal">
+    <div class="ui icon header">
+        <i class="archive icon"></i> 確定投給這組嗎？
+    </div>
+    <div class="content">
+        <p>
+            並將您寶貴的一票投給這組，同意送出後不得再次投票。
+        </p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i> No
+        </div>
+        <div class="ui green ok inverted button">
+            <i class="checkmark icon"></i> Yes
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#voting").click(function() {
+        $('.ui.basic.modal').modal('show');
+    });
+</script>
 
 @endsection()

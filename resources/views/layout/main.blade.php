@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="{{ asset('js/semantic.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/semantic.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -20,7 +21,7 @@
         活動列表
     </a>
     <div class="right menu">
-        <a class="item font-style">登入</a>
+        <a class="item font-style" href="{{ url('login') }}">登入</a>
     </div>
 </div>
 
