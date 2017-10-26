@@ -14,10 +14,10 @@
 <body>
 
 <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
-    <a class="active item font-style">
+    <a class="active item font-style" href="{{ url('/') }}">
         中原大學資訊管理學系投票系統
     </a>
-    <a class="item font-style">
+    <a class="item font-style" href="{{ url('/') }}">
         活動列表
     </a>
     <div class="right menu">
