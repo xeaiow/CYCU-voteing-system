@@ -14,6 +14,7 @@
         <Hello></Hello>
     </div>
     <!-- 載入打包後的 js 檔 -->
-    <script src="{{asset('resources/assets/js/hello.js')}}"></script>
+    <script src="{{ asset('js/hello.js') }}"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 </body>
 </html>

@@ -84,24 +84,30 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<script>
-    var example2 = new Vue({
-        el: '.example-2',
-        data: {
-            name: 'Vue.js'
-        },
-        // define methods under the `methods` object
-        methods: {
-            greet: function(event) {
-                window.location.href = 'activity/1';
-            }
-        }
-    })
-</script>
+
+        {{--  // define methods under the `methods` object
+        // methods: {
+        //     greet: function(event) {
+        //         window.location.href = 'activity/1';
+        //     },
+        //     get_activity: function(event) {
+        //         axios.get('//localhost/vote/public/get')
+        //             .then(function(response) {
+        //                 example2.info = response.data;
+        //             })
+        //             .catch(function(error) {
+        //                 /* 失敗，發生錯誤，然後...*/
+        //             });
+        //         console.log(example2.info);
+        //     }
+        // },
+        // mounted: function() {
+        //     this.get_activity()
+        // }  --}}
+
 
 @endsection()

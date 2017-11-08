@@ -8,16 +8,16 @@
 <script>
     export default {
         props: ['name'],
-        data () {
+        data() {
             return {
                 msg: 'This is a Laravel with Vue Demo.'
             }
-        }
+        },
     }
 </script>
 <style>
-.hello {
-    font-size: 2em;
-    color: green;
-}
+    .hello {
+        font-size: 2em;
+        color: green;
+    }
 </style>
