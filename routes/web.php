@@ -12,7 +12,15 @@ Route::get('/groups/get', 'VoteController@get_groups');
 
 Route::get('/groups/info/{id}', 'VoteController@get_groups_info');
 
+Route::post('/group/{id}/vote', 'VoteController@get_group_voting');
+
 Route::get('/group/info/{id}', 'VoteController@get_group_info');
+
+Route::post('/loginitouch', 'SystemController@login_touch');
+
+Route::post('/login/handle', 'SystemController@login_handle');
+
+Route::get('/login/status', 'SystemController@login_status');
 
 // Route::get('/login', 'SystemController@login');
 

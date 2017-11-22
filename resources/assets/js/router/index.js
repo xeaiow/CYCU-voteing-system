@@ -9,12 +9,18 @@ import Activity from '../components/Activity'
 import ActivityId from '../components/ActivityId'
 import ActivityLists from '../components/ActivityLists'
 import ActivityIdGroup from '../components/ActivityIdGroup'
+import Login from '../components/Login'
+
 
 export default new Router({
     mode: 'history',
     routes: [{
             path: '/',
             component: Activity
+        },
+        {
+            path: '/login',
+            component: Login
         },
         {
             path: '/about',

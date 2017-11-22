@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui bottom black attached button font-style" id="voting">投給他</div>
+                <div class="ui bottom black attached button font-style" @click="inputItouch">投給他</div>
             </div>
             <div class="twelve wide column">
                 <div class="ui piled segment project-content-text">
@@ -52,59 +52,106 @@
             </div>
         </div>
 
-        <!-- 投票視窗 -->
-        <div class="ui basic modal" id="voting-confirm">
-            <div class="ui icon header">
-                <i class="archive icon"></i> 確定投給這組嗎？
-            </div>
-            <div class="content">
-                <p>
-                    並將您寶貴的一票投給這組，同意送出後不得再次投票。
-                </p>
-            </div>
-            <div class="actions">
-                <div class="ui red basic cancel inverted button">
-                    <i class="remove icon"></i> No
-                </div>
-                <div class="ui green ok inverted button">
-                    <i class="checkmark icon"></i> Yes
-                </div>
-            </div>
-        </div>
-
-        <!-- 圖片預覽 -->
-        <div class="ui basic modal view-images">
-            <i class="close icon"></i>
-            <div class="image content">
-                <div class="ui Massive image centered">
-                    <img src="http://140.135.67.5/Project/102GP/B12/images/4.png">
-                </div>
-            </div>
-        </div>
-
     </div>
 </template>
 
 <script>
     export default {
+
         data: function () {
+
             return {
                 items: {},
-                activitys: {}
+                activitys: {},
+                verifResult:''
             }
         },
         methods: {
-            greet: function(event) {
-                window.location.href = '1/info';
-            },
+            success: function (message) {
 
+                this.$swal(message, '', 'success')
+            },
+            failed: function (message) {
+
+                this.$swal(message, '', 'error')
+            },
+            inputItouch: function () {
+                
+                var selfRoute = this.$route.params.id;
+                var self = this;
+                
+                self.$swal({
+
+                    title: '請輸入 iTouch 驗證身分',
+                    html:
+                        '<p>經送出後不可反悔，每組學號只有乙次投票機會。</p>' + 
+                        '帳號：<input class="swal2-input" name="username" value="10244257" />' +
+                        '密碼：<input class="swal2-input" name="password" value="Dream0919" />' + 
+                        '<input type="hidden" name="_token" value="{{ csrf_token() }}">',
+                    focusConfirm: true,
+                    showCancelButton: true,
+                    confirmButtonText: "確定",
+                    cancelButtonText: "燒等"
+
+                    }).then(function (result) {
+
+                        // 輸出使用者輸入的帳密
+                        console.log(document.querySelector("input[name=username]").value+", "+document.querySelector("input[name=password]").value);
+
+                        var student_id = document.querySelector("input[name=username]").value;
+
+                        // 針對該組投票
+                        axios.post('//127.0.0.1:8000/loginitouch', {
+                            userId: student_id,
+                            password: document.querySelector("input[name=password]").value
+                        })
+                        .then(function (response) {
+                            
+                            var verifResult = response.data[0].substr(-7, 4); // 取得系級跟班級
+                            var dept_class = ["資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
+
+                            // 判斷是否為合格投票者
+                            if (dept_class.indexOf(verifResult) != -1) {
+
+                                //針對該組投票
+                                axios.post('//127.0.0.1:8000/group/' + selfRoute + '/vote', {
+                                    id: selfRoute,
+                                    student_id: student_id,
+                                    class: verifResult
+                                })
+                                .then(function (response) {
+                                    
+                                    // response message
+                                    if (response.data != false)
+                                    {
+                                        
+                                        self.failed('你投過了！')
+                                    }
+                                    else
+                                    {
+                                        self.success('已完成投票！')
+                                    }
+                                })
+                                .catch(function (error) {
+                                    
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            
+                        });
+                    
+                }).catch()
+            }     
         },
         mounted: function() {
+
             axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(response => {this.items = response.data})
             axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
         }
     }
 </script>
+
 
 
 

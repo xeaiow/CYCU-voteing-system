@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('./plugins/sweet-alert-plugin');
 
 import Vue from 'vue'
 import App from './components/App'
