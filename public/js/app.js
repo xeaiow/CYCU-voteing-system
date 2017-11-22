@@ -47940,18 +47940,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            items: []
+            items: [],
+            username: '',
+            password: '',
+            token: ''
         };
+    },
+    methods: {
+        logout: function logout() {
+            axios.get('//127.0.0.1:8000/logout');
+            this.$router.go('/');
+        }
     },
     mounted: function mounted() {
         var _this = this;
 
         axios.get('//127.0.0.1:8000/activity/get').then(function (response) {
             _this.items = response.data;
+        });
+        axios.get('//127.0.0.1:8000/login/status').then(function (response) {
+            _this.token = response.data.token;_this.username = response.data.username;
         });
     }
 });
@@ -47996,18 +48010,34 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("div", { staticClass: "right menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "item font-style",
-              on: {
-                click: function($event) {
-                  _vm.$router.push("/")
-                }
-              }
-            },
-            [_vm._v("登入")]
-          )
+          _vm.token
+            ? _c("a", { staticClass: "item font-style" }, [
+                _vm._v(_vm._s(this.username) + " 您好")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.token
+            ? _c(
+                "a",
+                { staticClass: "item font-style", on: { click: _vm.logout } },
+                [_vm._v("登出")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/login")
+                    }
+                  }
+                },
+                [_vm._v("登入")]
+              )
+            : _vm._e()
         ])
       ]
     ),
@@ -48159,24 +48189,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            items: []
+            items: [],
+            username: '',
+            password: '',
+            token: ''
         };
-    },
-    methods: {
-        greet: function greet(event) {
-            window.location.href = '1/info';
-        }
-
     },
     mounted: function mounted() {
         var _this = this;
 
         axios.get('//127.0.0.1:8000/groups/info/' + this.$route.params.id).then(function (response) {
             _this.items = response.data;
+        });
+        axios.get('//127.0.0.1:8000/login/status').then(function (response) {
+            _this.token = response.data.token;_this.username = response.data.username;
         });
     }
 });
@@ -48221,18 +48253,41 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("div", { staticClass: "right menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "item font-style",
-              on: {
-                click: function($event) {
-                  _vm.$router.push("/")
-                }
-              }
-            },
-            [_vm._v("登入")]
-          )
+          _vm.token
+            ? _c("a", { staticClass: "item font-style" }, [
+                _vm._v(_vm._s(this.username) + " 您好")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/logout")
+                    }
+                  }
+                },
+                [_vm._v("登出")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/login")
+                    }
+                  }
+                },
+                [_vm._v("登入")]
+              )
+            : _vm._e()
         ])
       ]
     ),
@@ -48398,11 +48453,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            items: []
+            items: [],
+            username: '',
+            password: '',
+            token: ''
         };
     },
     methoded: function methoded() {
@@ -48410,6 +48470,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         axios.get('//127.0.0.1:8000/activity/get').then(function (response) {
             _this.items = response.data;
+        });
+        axios.get('//127.0.0.1:8000/login/status').then(function (response) {
+            _this.token = response.data.token;_this.username = response.data.username;
         });
     }
 });
@@ -48454,18 +48517,41 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("div", { staticClass: "right menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "item font-style",
-              on: {
-                click: function($event) {
-                  _vm.$router.push("/")
-                }
-              }
-            },
-            [_vm._v("登入")]
-          )
+          _vm.token
+            ? _c("a", { staticClass: "item font-style" }, [
+                _vm._v(_vm._s(this.username) + " 您好")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/logout")
+                    }
+                  }
+                },
+                [_vm._v("登出")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/login")
+                    }
+                  }
+                },
+                [_vm._v("登入")]
+              )
+            : _vm._e()
         ])
       ]
     ),
@@ -48620,6 +48706,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -48628,7 +48716,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             items: {},
             activitys: {},
-            verifResult: ''
+            verifResult: '',
+            username: '',
+            password: '',
+            token: ''
         };
     },
     methods: {
@@ -48702,6 +48793,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(function (response) {
             _this.activitys = response.data;
         });
+        axios.get('//127.0.0.1:8000/login/status').then(function (response) {
+            _this.token = response.data.token;_this.username = response.data.username;
+        });
     }
 });
 
@@ -48745,18 +48839,41 @@ var render = function() {
         ),
         _vm._v(" "),
         _c("div", { staticClass: "right menu" }, [
-          _c(
-            "a",
-            {
-              staticClass: "item font-style",
-              on: {
-                click: function($event) {
-                  _vm.$router.push("/")
-                }
-              }
-            },
-            [_vm._v("登入")]
-          )
+          _vm.token
+            ? _c("a", { staticClass: "item font-style" }, [
+                _vm._v(_vm._s(this.username) + " 您好")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/logout")
+                    }
+                  }
+                },
+                [_vm._v("登出")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.token
+            ? _c(
+                "a",
+                {
+                  staticClass: "item font-style",
+                  on: {
+                    click: function($event) {
+                      _vm.$router.push("/login")
+                    }
+                  }
+                },
+                [_vm._v("登入")]
+              )
+            : _vm._e()
         ])
       ]
     ),
@@ -48962,20 +49079,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
 
         login: function login() {
+            var _this = this;
 
             axios.post('//127.0.0.1:8000/login/handle', {
                 username: this.username,
                 password: this.password
             }).then(function (response) {
-                console.log(response);
-            }).catch(function (error) {});
+                _this.token = response.data.token;
+                _this.username = response.data.username;
+                _this.$router.push('/');
+            });
+        },
+        logout: function logout() {
+
+            this.$router.go('/');
         }
     },
     mounted: function mounted() {
-        var _this = this;
+        var _this2 = this;
 
         axios.get('//127.0.0.1:8000/login/status').then(function (response) {
-            _this.token = response.data.token;_this.username = response.data.username;
+            _this2.token = response.data.token;_this2.username = response.data.username;
         });
     }
 });
@@ -49029,14 +49153,7 @@ var render = function() {
           _vm.token
             ? _c(
                 "a",
-                {
-                  staticClass: "item font-style",
-                  on: {
-                    click: function($event) {
-                      _vm.$router.push("/logout")
-                    }
-                  }
-                },
+                { staticClass: "item font-style", on: { click: _vm.logout } },
                 [_vm._v("登出")]
               )
             : _vm._e(),
@@ -49048,7 +49165,7 @@ var render = function() {
                   staticClass: "item font-style",
                   on: {
                     click: function($event) {
-                      _vm.$router.push("/")
+                      _vm.$router.push("/login")
                     }
                   }
                 },

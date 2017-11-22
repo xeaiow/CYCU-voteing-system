@@ -66,9 +66,9 @@ class SystemController extends Controller
     // 登入作業
     public function login_handle (Request $request)
     {
-        $isExists = Users::Where('username', $request->username)->Where('password', $request->password)->count();
+        $getUserInfo = Users::Where('username', $request->username)->Where('password', $request->password);
         
-        if ($isExists === 1)
+        if ($getUserInfo->count() === 1)
         {
             // 產生一組新的 token
             $token = md5(uniqid(rand()));
@@ -81,7 +81,7 @@ class SystemController extends Controller
             Session::put('username', $request->username);
 
             // 回傳是否成功登入 1 為成功, 0 為失敗
-            echo $isExists;
+            echo $getUserInfo->first();
         }
     }
 
@@ -89,6 +89,13 @@ class SystemController extends Controller
     public function login_status ()
     {
         echo Users::Where('username', Session::get('username'))->Where('token', Session::get('token'))->first();
+    }
+
+    // 登出
+    public function logout_handle ()
+    {
+        Session::flush();
+        return redirect('/');
     }
 
 }

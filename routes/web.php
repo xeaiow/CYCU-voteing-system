@@ -22,6 +22,8 @@ Route::post('/login/handle', 'SystemController@login_handle');
 
 Route::get('/login/status', 'SystemController@login_status');
 
+Route::get('/logout', 'SystemController@logout_handle');
+
 // Route::get('/login', 'SystemController@login');
 
 // Route::get('/ss', function () {
