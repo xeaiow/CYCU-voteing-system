@@ -80,7 +80,7 @@ class SystemController extends Controller
             Session::put('token', $token);
             Session::put('username', $request->username);
 
-            // 回傳是否成功登入 1 為成功, 0 為失敗
+            // 回傳個人資料
             echo $getUserInfo->first();
         }
     }

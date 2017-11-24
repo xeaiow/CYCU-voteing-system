@@ -5,7 +5,7 @@
             <a class="item font-style" @click="$router.push('/')">活動列表</a>
             <div class="right menu">
                 <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
-                <a class="item font-style" v-if="token" @click="$router.push('/logout')">登出</a>
+                <a class="item font-style" v-if="token" @click="logout">登出</a>
                 <a class="item font-style" v-if="!token" @click="$router.push('/login')">登入</a>
             </div>
         </div>
@@ -79,6 +79,10 @@
             failed: function (message) {
 
                 this.$swal(message, '', 'error')
+            },
+            logout: function () {
+                axios.get('//127.0.0.1:8000/logout')
+                this.$router.go('/');
             },
             inputItouch: function () {
                 

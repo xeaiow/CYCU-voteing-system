@@ -48201,6 +48201,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             token: ''
         };
     },
+    methods: {
+        logout: function logout() {
+            axios.get('//127.0.0.1:8000/logout');
+            this.$router.go('/');
+        }
+    },
     mounted: function mounted() {
         var _this = this;
 
@@ -48262,14 +48268,7 @@ var render = function() {
           _vm.token
             ? _c(
                 "a",
-                {
-                  staticClass: "item font-style",
-                  on: {
-                    click: function($event) {
-                      _vm.$router.push("/logout")
-                    }
-                  }
-                },
+                { staticClass: "item font-style", on: { click: _vm.logout } },
                 [_vm._v("登出")]
               )
             : _vm._e(),
@@ -48465,6 +48464,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             token: ''
         };
     },
+    methods: {
+        logout: function logout() {
+            axios.get('//127.0.0.1:8000/logout');
+            this.$router.go('/');
+        }
+    },
     methoded: function methoded() {
         var _this = this;
 
@@ -48526,14 +48531,7 @@ var render = function() {
           _vm.token
             ? _c(
                 "a",
-                {
-                  staticClass: "item font-style",
-                  on: {
-                    click: function($event) {
-                      _vm.$router.push("/logout")
-                    }
-                  }
-                },
+                { staticClass: "item font-style", on: { click: _vm.logout } },
                 [_vm._v("登出")]
               )
             : _vm._e(),
@@ -48731,6 +48729,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.$swal(message, '', 'error');
         },
+        logout: function logout() {
+            axios.get('//127.0.0.1:8000/logout');
+            this.$router.go('/');
+        },
         inputItouch: function inputItouch() {
 
             var selfRoute = this.$route.params.id;
@@ -48848,14 +48850,7 @@ var render = function() {
           _vm.token
             ? _c(
                 "a",
-                {
-                  staticClass: "item font-style",
-                  on: {
-                    click: function($event) {
-                      _vm.$router.push("/logout")
-                    }
-                  }
-                },
+                { staticClass: "item font-style", on: { click: _vm.logout } },
                 [_vm._v("登出")]
               )
             : _vm._e(),
@@ -49066,6 +49061,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -49079,27 +49080,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
 
         login: function login() {
-            var _this = this;
+
+            var username;
+            var token;
+            var router = this.$router;
+            var self = this;
 
             axios.post('//127.0.0.1:8000/login/handle', {
                 username: this.username,
                 password: this.password
+
             }).then(function (response) {
-                _this.token = response.data.token;
-                _this.username = response.data.username;
-                _this.$router.push('/');
+
+                // 登入失敗
+                if (response.data === "") {
+                    self.$swal({
+                        title: "驗證失敗！",
+                        text: "請確認您的 iTouch 帳密。",
+                        type: "error",
+                        confirmButtonText: "好的"
+                    });
+                    return false;
+                }
+
+                // 注入 token 跟學號資訊
+                token = response.data.token;
+                username = response.data.username;
+                router.push('/');
+
+                self.$swal({
+                    title: "驗證成功！",
+                    text: "可以開始投票了。",
+                    type: "success",
+                    confirmButtonText: "好的"
+                });
             });
         },
         logout: function logout() {
-
+            axios.get('//127.0.0.1:8000/logout');
             this.$router.go('/');
         }
     },
     mounted: function mounted() {
-        var _this2 = this;
+        var _this = this;
 
         axios.get('//127.0.0.1:8000/login/status').then(function (response) {
-            _this2.token = response.data.token;_this2.username = response.data.username;
+            _this.token = response.data.token;_this.username = response.data.username;
         });
     }
 });
@@ -49237,13 +49263,28 @@ var render = function() {
               on: { click: _vm.login }
             },
             [_vm._v("登入")]
-          )
+          ),
+          _vm._v(" "),
+          _vm._m(0)
         ])
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ui info message" }, [
+      _c("ul", { staticClass: "list" }, [
+        _c("li", [_vm._v("帳號及密碼與 iTouch 相同")]),
+        _vm._v(" "),
+        _c("li", [_vm._v("本系統僅作為驗證身分用")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

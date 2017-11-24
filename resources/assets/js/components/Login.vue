@@ -23,6 +23,12 @@
                         <input type="password" v-model="password">
                     </div>
                     <button class="ui button basic" type="button" @click="login">登入</button>
+                    <div class="ui info message">
+                        <ul class="list">
+                            <li>帳號及密碼與 iTouch 相同</li>
+                            <li>本系統僅作為驗證身分用</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,18 +50,45 @@
 
             login: function () {
 
+                var username;
+                var token;
+                var router = this.$router;
+                var self = this;
+
                 axios.post('//127.0.0.1:8000/login/handle', {
                     username: this.username,
                     password: this.password
+
                 })
-                .then(response => {
-                    this.token = response.data.token;
-                    this.username = response.data.username;
-                    this.$router.push('/');
+                .then(function (response) {          
+                    
+                    // 登入失敗
+                    if (response.data === "")
+                    {
+                        self.$swal({
+                            title: "驗證失敗！",
+                            text: "請確認您的 iTouch 帳密。",
+                            type: "error",
+                            confirmButtonText: "好的",
+                        });
+                        return false;
+                    }
+
+                    // 注入 token 跟學號資訊
+                    token = response.data.token;
+                    username = response.data.username;
+                    router.push('/');
+                    
+                    self.$swal({
+                        title: "驗證成功！",
+                        text: "可以開始投票了。",
+                        type: "success",
+                        confirmButtonText: "好的",
+                    });
                 });
             },
             logout: function () {
-             
+                axios.get('//127.0.0.1:8000/logout')
                 this.$router.go('/');
             }
         },
