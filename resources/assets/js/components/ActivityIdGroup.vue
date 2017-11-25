@@ -11,8 +11,19 @@
         </div>
 
         <div class="ui grid stackable cycuvote-container">
-            <!-- card -->
-            <div class="four wide column">
+            
+            <div class="eight wide column centered center aligned" v-if="!message">
+                <div class="ui negative message">
+                    <div class="header">
+                        The page you were looking for doesn't exist.
+                    </div>
+                    <p>
+                        You may have mistyped the address or the page may have moved.
+                    </p>
+                </div>
+            </div>
+
+            <div class="four wide column" v-if="message">
                 <div class="ui card fluid">
                     <div class="image">
                         <img v-bind:src="items.img">
@@ -41,7 +52,7 @@
                 </div>
                 <div class="ui bottom black attached button font-style" @click="inputItouch">投給他</div>
             </div>
-            <div class="twelve wide column">
+            <div class="twelve wide column" v-if="message">
                 <div class="ui piled segment project-content-text">
                     {{ items.discription }}
                 </div>
@@ -49,11 +60,11 @@
                     <i class="image icon"></i> 海報預覽
                 </h4>
                 <div class="ui fluid images">
-                    <img v-for="(activity, index) in activitys.pic" :key="index" v-bind:src="activity" class="team-images" />
+                    <img v-for="(item, index) in items.photo" :key="index" v-bind:src="item" class="team-images" />
                 </div>
             </div>
+          
         </div>
-
     </div>
 </template>
 
@@ -65,6 +76,7 @@
             return {
                 items: {},
                 activitys: {},
+                message: '',
                 verifResult:'',
                 username: '',
                 password: '',
@@ -133,7 +145,6 @@
                                     // response message
                                     if (response.data != false)
                                     {
-                                        
                                         self.failed('你投過了！')
                                     }
                                     else
@@ -155,7 +166,7 @@
         },
         mounted: function() {
 
-            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(response => {this.items = response.data})
+            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(response => {this.items = response.data.info;this.message = response.data.status;})
             axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
             axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
         }

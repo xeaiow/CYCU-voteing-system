@@ -48191,11 +48191,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             items: [],
+            info: [],
+            message: '',
             username: '',
             password: '',
             token: ''
@@ -48211,7 +48227,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         axios.get('//127.0.0.1:8000/groups/info/' + this.$route.params.id).then(function (response) {
-            _this.items = response.data;
+            _this.items = response.data.groups;_this.info = response.data.activity;_this.message = response.data.message;
         });
         axios.get('//127.0.0.1:8000/login/status').then(function (response) {
             _this.token = response.data.token;_this.username = response.data.username;
@@ -48292,69 +48308,86 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "ui grid cycuvote-container" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("div", { staticClass: "sixteen wide column" }, [
-        _c(
-          "div",
-          { staticClass: "ui stackable three column grid example-2" },
-          _vm._l(_vm.items, function(item, index) {
-            return _c("div", { key: index, staticClass: "column" }, [
-              _c("div", { staticClass: "ui cards stackable" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "card pointer",
-                    on: {
-                      click: function($event) {
-                        _vm.$router.push({ path: "/group/" + item._id })
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "content" }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(item.groups) +
-                          "\n                            "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "image" }, [
-                      _c("img", { attrs: { src: item.img } })
-                    ])
-                  ]
+      _c("div", { staticClass: "eight wide column centered center aligned" }, [
+        _vm.message
+          ? _c("div", { staticClass: "ui negative message" }, [
+              _c("div", { staticClass: "header" }, [
+                _vm._v(
+                  "\n                    The page you were looking for doesn't exist.\n                "
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "\n                    You may have mistyped the address or the page may have moved.\n                "
                 )
               ])
             ])
-          })
-        )
-      ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      !_vm.message
+        ? _c("div", [
+            _c("div", { staticClass: "sixteen wide column" }, [
+              _c("h2", { staticClass: "ui icon header center aligned" }, [
+                _c("i", { staticClass: "lab icon" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "content font-style" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.info.title) +
+                      "\n                    "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "sub header" }, [
+                  _vm._v(_vm._s(_vm.info.description))
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "sixteen wide column" }, [
+              _c(
+                "div",
+                { staticClass: "ui stackable three column grid" },
+                _vm._l(_vm.items, function(item, index) {
+                  return _c("div", { key: index, staticClass: "column" }, [
+                    _c("div", { staticClass: "ui cards stackable" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "card pointer",
+                          on: {
+                            click: function($event) {
+                              _vm.$router.push({ path: "/group/" + item._id })
+                            }
+                          }
+                        },
+                        [
+                          _c("div", { staticClass: "content" }, [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(item.groups) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "image" }, [
+                            _c("img", { attrs: { src: item.img } })
+                          ])
+                        ]
+                      )
+                    ])
+                  ])
+                })
+              )
+            ])
+          ])
+        : _vm._e()
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "sixteen wide column" }, [
-      _c("h2", { staticClass: "ui icon header center aligned" }, [
-        _c("i", { staticClass: "lab icon" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "content font-style" }, [
-          _vm._v("\n                    106 中原資管專題複賽\n                ")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "sub header" }, [
-          _vm._v(
-            "每人一票，且不得重複 ｜ 大一 ～ 大三 ｜ 2017/10/26 ~ 2017/12/31"
-          )
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -48706,6 +48739,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -48714,6 +48758,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             items: {},
             activitys: {},
+            message: '',
             verifResult: '',
             username: '',
             password: '',
@@ -48775,7 +48820,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                             // response message
                             if (response.data != false) {
-
                                 self.failed('你投過了！');
                             } else {
                                 self.success('已完成投票！');
@@ -48790,7 +48834,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (response) {
-            _this.items = response.data;
+            _this.items = response.data.info;_this.message = response.data.status;
         });
         axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(function (response) {
             _this.activitys = response.data;
@@ -48874,88 +48918,122 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "ui grid stackable cycuvote-container" }, [
-      _c("div", { staticClass: "four wide column" }, [
-        _c("div", { staticClass: "ui card fluid" }, [
-          _c("div", { staticClass: "image" }, [
-            _c("img", { attrs: { src: _vm.items.img } })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "content center aligned" }, [
-            _c("a", { staticClass: "header font-style" }, [
-              _vm._v(_vm._s(_vm.items.groups))
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "ui vertical fluid menu" }, [
-          _c("div", { staticClass: "ui segment basic" }, [
-            _c("div", { staticClass: "ui list" }, [
-              _c("div", { staticClass: "item" }, [
-                _c("i", { staticClass: "user icon" }),
-                _vm._v(" "),
-                _c("div", { staticClass: "content font-style" }, [
-                  _vm._v(
-                    "\n                                " +
-                      _vm._s(_vm.activitys.permission) +
-                      "\n                            "
-                  )
-                ])
+      !_vm.message
+        ? _c(
+            "div",
+            { staticClass: "eight wide column centered center aligned" },
+            [_vm._m(0)]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.message
+        ? _c("div", { staticClass: "four wide column" }, [
+            _c("div", { staticClass: "ui card fluid" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: _vm.items.img } })
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "item" }, [
-                _c("i", { staticClass: "calendar icon" }),
-                _vm._v(" "),
-                _c("div", { staticClass: "content font-style" }, [
-                  _vm._v(
-                    "\n                                " +
-                      _vm._s(_vm.activitys.started) +
-                      " ~ " +
-                      _vm._s(_vm.activitys.deadline) +
-                      "\n                            "
-                  )
+              _c("div", { staticClass: "content center aligned" }, [
+                _c("a", { staticClass: "header font-style" }, [
+                  _vm._v(_vm._s(_vm.items.groups))
                 ])
               ])
-            ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "ui vertical fluid menu" }, [
+              _c("div", { staticClass: "ui segment basic" }, [
+                _c("div", { staticClass: "ui list" }, [
+                  _c("div", { staticClass: "item" }, [
+                    _c("i", { staticClass: "user icon" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "content font-style" }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(_vm.activitys.permission) +
+                          "\n                            "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "item" }, [
+                    _c("i", { staticClass: "calendar icon" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "content font-style" }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(_vm.activitys.started) +
+                          " ~ " +
+                          _vm._s(_vm.activitys.deadline) +
+                          "\n                            "
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "ui bottom black attached button font-style",
+                on: { click: _vm.inputItouch }
+              },
+              [_vm._v("投給他")]
+            )
           ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "ui bottom black attached button font-style",
-            on: { click: _vm.inputItouch }
-          },
-          [_vm._v("投給他")]
-        )
-      ]),
+        : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "twelve wide column" }, [
-        _c("div", { staticClass: "ui piled segment project-content-text" }, [
-          _vm._v(
-            "\n                " +
-              _vm._s(_vm.items.discription) +
-              "\n            "
-          )
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "ui fluid images" },
-          _vm._l(_vm.activitys.pic, function(activity, index) {
-            return _c("img", {
-              key: index,
-              staticClass: "team-images",
-              attrs: { src: activity }
-            })
-          })
-        )
-      ])
+      _vm.message
+        ? _c("div", { staticClass: "twelve wide column" }, [
+            _c(
+              "div",
+              { staticClass: "ui piled segment project-content-text" },
+              [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.items.discription) +
+                    "\n            "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "ui fluid images" },
+              _vm._l(_vm.items.photo, function(item, index) {
+                return _c("img", {
+                  key: index,
+                  staticClass: "team-images",
+                  attrs: { src: item }
+                })
+              })
+            )
+          ])
+        : _vm._e()
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ui negative message" }, [
+      _c("div", { staticClass: "header" }, [
+        _vm._v(
+          "\n                    The page you were looking for doesn't exist.\n                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v(
+          "\n                    You may have mistyped the address or the page may have moved.\n                "
+        )
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
