@@ -12,8 +12,6 @@ Route::get('/groups/get', 'VoteController@get_groups');
 
 Route::get('/groups/info/{id}', 'VoteController@get_groups_info');
 
-Route::post('/group/{id}/vote', 'VoteController@get_group_voting');
-
 Route::get('/group/info/{id}', 'VoteController@get_group_info');
 
 Route::get('/loginitouch', 'SystemController@login_touch');
@@ -25,6 +23,8 @@ Route::get('/login/status', 'SystemController@login_status');
 Route::get('/logout', 'SystemController@logout_handle');
 
 Route::post('/login/save', 'SystemController@login_save_handle');
+
+Route::get('/voting/{id}', 'VoteController@voting_handle');
 
 // Route::get('/login', 'SystemController@login');
 

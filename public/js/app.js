@@ -48750,6 +48750,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 
@@ -48759,6 +48760,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             items: {},
             activitys: {},
             message: '',
+            voting: '',
             verifResult: '',
             username: '',
             password: '',
@@ -48766,13 +48768,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     methods: {
-        success: function success(message) {
+        mess: function mess(text, type) {
 
-            this.$swal(message, '', 'success');
-        },
-        failed: function failed(message) {
-
-            this.$swal(message, '', 'error');
+            this.$swal(text, '', type);
         },
         logout: function logout() {
             axios.get('//127.0.0.1:8000/logout');
@@ -48785,56 +48783,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             self.$swal({
 
-                title: '請輸入 iTouch 驗證身分',
-                html: '<p>經送出後不可反悔，每組學號只有乙次投票機會。</p>' + '帳號：<input class="swal2-input" name="username" value="10244257" />' + '密碼：<input class="swal2-input" name="password" value="Dream0919" />' + '<input type="hidden" name="_token" value="{{ csrf_token() }}">',
-                focusConfirm: true,
+                title: '將神聖一票投給這組？',
+                text: "送出後不可反悔，且不可重複投票。",
                 showCancelButton: true,
                 confirmButtonText: "確定",
-                cancelButtonText: "燒等"
+                cancelButtonText: "考慮"
 
-            }).then(function (result) {
+            }).then(function (res) {
 
-                // 輸出使用者輸入的帳密
-                console.log(document.querySelector("input[name=username]").value + ", " + document.querySelector("input[name=password]").value);
+                axios.get('//127.0.0.1:8000/voting/' + selfRoute).then(function (res) {
 
-                var student_id = document.querySelector("input[name=username]").value;
-
-                // 針對該組投票
-                axios.post('//127.0.0.1:8000/loginitouch', {
-                    userId: student_id,
-                    password: document.querySelector("input[name=password]").value
-                }).then(function (response) {
-
-                    var verifResult = response.data[0].substr(-7, 4); // 取得系級跟班級
-                    var dept_class = ["資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
-
-                    // 判斷是否為合格投票者
-                    if (dept_class.indexOf(verifResult) != -1) {
-
-                        //針對該組投票
-                        axios.post('//127.0.0.1:8000/group/' + selfRoute + '/vote', {
-                            id: selfRoute,
-                            student_id: student_id,
-                            class: verifResult
-                        }).then(function (response) {
-
-                            // response message
-                            if (response.data != false) {
-                                self.failed('你投過了！');
-                            } else {
-                                self.success('已完成投票！');
-                            }
-                        }).catch(function (error) {});
+                    if (res.data.status == true) {
+                        self.mess('已完成投票！', 'success');
+                        self.voting = 1;
+                        return false;
                     }
-                }).catch(function (error) {});
-            }).catch();
+                    self.mess('投票失敗！', 'error');
+                });
+            });
         }
     },
     mounted: function mounted() {
         var _this = this;
 
         axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (response) {
-            _this.items = response.data.info;_this.message = response.data.status;
+            _this.items = response.data.info;_this.voting = response.data.voting;_this.message = response.data.status;console.log(response);
         });
         axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(function (response) {
             _this.activitys = response.data;
@@ -48972,14 +48945,22 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "ui bottom black attached button font-style",
-                on: { click: _vm.inputItouch }
-              },
-              [_vm._v("投給他")]
-            )
+            _vm.voting == 0
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "ui bottom black attached button font-style",
+                    on: { click: _vm.inputItouch }
+                  },
+                  [_vm._v("投給他")]
+                )
+              : _c(
+                  "div",
+                  {
+                    staticClass: "ui bottom disabled attached button font-style"
+                  },
+                  [_vm._v("已投過")]
+                )
           ])
         : _vm._e(),
       _vm._v(" "),

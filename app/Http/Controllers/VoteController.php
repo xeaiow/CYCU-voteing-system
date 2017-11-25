@@ -7,6 +7,7 @@ use App\Activity;
 use App\Groups;
 use App\Vote;
 use Redirect;
+use Session;
 
 class VoteController extends Controller
 {
@@ -59,10 +60,14 @@ class VoteController extends Controller
 
         $activity = Activity::Where('_id', $getGroupsInfo['activity'])->Where('started', '<=', $today)->Where('deadline', '>=', $today);
         
+        $voting   = Vote::Where('student_id', Session::get('username'))->Where('activity_id', $getGroupsInfo['activity'])->count();
+
         if ($activity->count() == 1)
         {
             $response['info']   = $getGroupsInfo;
             $response['status'] = true;
+            $response['voting'] = $voting;
+
             return json_encode($response);
         }
 
@@ -70,22 +75,31 @@ class VoteController extends Controller
         echo json_encode($response);
     }
 
-    // 針對某個組投票
-    public function get_group_voting (Request $request)
+    // 確定投票
+    public function voting_handle (Request $request)
     {
-        $count = Vote::Where('student_id', $request->student_id)->Where('group_id', $request->id)->count();
+        $group_id   = $request->id;
+        $student_id = Session::get('username');
 
-        // 如果投過就阻止
-        if ($count > 0)
+        $isExists = Vote::Where('group_id', $group_id)->Where('student_id', $student_id);
+        $groups = Groups::Where('_id', $group_id)->first();
+
+        if ($isExists->count() == 0)
         {
-            $response['status'] = false;
+            $voting = [
+                'student_id' => $student_id,
+                'group_id' => $group_id,
+                'activity_id' => $groups['activity']
+            ];
+
+            Vote::create($voting);
+
+            $response['status'] = true;
+
             return json_encode($response);
         }
 
-        Vote::create([
-            'group_id'   => $request->id,
-            'student_id' => $request->student_id,
-            'class'      => $request->class
-        ]);
+        $response['status'] = false;
+        return json_encode($response);
     }
 }
