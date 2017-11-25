@@ -49093,7 +49093,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (response) {
 
                 // 登入失敗
-                if (response.data === "") {
+                if (response.data.login_status != 1 && response.data.login_status != 2) {
                     self.$swal({
                         title: "驗證失敗！",
                         text: "請確認您的 iTouch 帳密。",
@@ -49103,10 +49103,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return false;
                 }
 
-                // 注入 token 跟學號資訊
-                token = response.data.token;
-                username = response.data.username;
-                router.push('/');
+                if (response.data.info !== undefined) {
+                    username = response.data.info.substr(3, 8);
+                    axios.post('//127.0.0.1:8000/login/save', {
+                        username: username
+                    });
+                } else {
+                    // 注入 token 跟學號資訊
+                    token = response.data.token;
+                    username = response.data.username;
+
+                    router.push('/');
+                }
 
                 self.$swal({
                     title: "驗證成功！",

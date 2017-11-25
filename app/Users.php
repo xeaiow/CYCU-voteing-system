@@ -8,6 +8,6 @@ class Users extends Eloquent
 {
     protected $primaryKey = '_id';
     protected $collection = 'users';
-    protected $fillable = ['username', 'password'];
+    protected $fillable = ['username', 'password', 'token'];
     protected $hidden = ['password', '_id', 'updated_at'];
 }

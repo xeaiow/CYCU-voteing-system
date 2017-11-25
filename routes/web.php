@@ -16,13 +16,15 @@ Route::post('/group/{id}/vote', 'VoteController@get_group_voting');
 
 Route::get('/group/info/{id}', 'VoteController@get_group_info');
 
-Route::post('/loginitouch', 'SystemController@login_touch');
+Route::get('/loginitouch', 'SystemController@login_touch');
 
 Route::post('/login/handle', 'SystemController@login_handle');
 
 Route::get('/login/status', 'SystemController@login_status');
 
 Route::get('/logout', 'SystemController@logout_handle');
+
+Route::post('/login/save', 'SystemController@login_save_handle');
 
 // Route::get('/login', 'SystemController@login');
 
