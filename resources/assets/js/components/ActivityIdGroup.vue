@@ -11,19 +11,8 @@
         </div>
 
         <div class="ui grid stackable cycuvote-container">
-            
-            <div class="eight wide column centered center aligned" v-if="!message">
-                <div class="ui negative message">
-                    <div class="header">
-                        The page you were looking for doesn't exist.
-                    </div>
-                    <p>
-                        You may have mistyped the address or the page may have moved.
-                    </p>
-                </div>
-            </div>
 
-            <div class="four wide column" v-if="message">
+            <div class="four wide column">
                 <div class="ui card fluid">
                     <div class="image">
                         <img v-bind:src="items.img">
@@ -50,10 +39,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui bottom black attached button font-style" @click="inputItouch" v-if="voting == 0">投給他</div>
-                <div class="ui bottom disabled attached button font-style" v-else>已投過</div>
+
+                <div v-if="isLogin">
+                    <div class="ui bottom black attached button font-style" @click="inputItouch" v-if="voting == 0">投給這組</div>
+                    <div class="ui bottom disabled attached button font-style" v-else>finished</div>
+                </div>
+                <div class="ui bottom black attached button font-style" v-else @click="login">投給這組</div>
+                
             </div>
-            <div class="twelve wide column" v-if="message">
+            <div class="twelve wide column">
                 <div class="ui piled segment project-content-text">
                     {{ items.discription }}
                 </div>
@@ -77,12 +71,13 @@
             return {
                 items: {},
                 activitys: {},
-                message: '',
                 voting: '',
+                isLogin: false,
                 verifResult:'',
                 username: '',
                 password: '',
-                token: ''
+                token: '',
+                level: ''
             }
         },
         methods: {
@@ -94,10 +89,14 @@
                 axios.get('//127.0.0.1:8000/logout')
                 this.$router.go('/');
             },
+            login: function () {
+                this.$router.push('/login');
+            },
             inputItouch: function () {
                 
                 var selfRoute   = this.$route.params.id;
                 var self        = this;
+                var dept        = [ "資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
                 
                 self.$swal({
 
@@ -109,6 +108,15 @@
 
                     }).then(function (res) {
 
+                        if (dept.indexOf(self.level) == -1)
+                        {
+                            self.$swal({
+                                title: '您的系級不適用此活動！',
+                                text: self.level + "尚無權限參與此投票",
+                                confirmButtonText: "知道了",
+                            });
+                            return false;
+                        }
 
                         axios.get('//127.0.0.1:8000/voting/' + selfRoute)
                         .then(function (res) {
@@ -122,14 +130,38 @@
                             self.mess('投票失敗！', 'error');
                         });
 
+                    }).catch(function () {
+
                     });
             }     
         },
         mounted: function() {
 
-            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(response => {this.items = response.data.info;this.voting = response.data.voting;this.message = response.data.status;console.log(response);})
+            var self    = this;
+            var router  = this.$router;
+
+            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (res) 
+                {
+                    self.items = res.data.info;
+                    self.voting = res.data.voting;
+                    self.message = res.data.status;
+                });
             axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
+            axios.get('//127.0.0.1:8000/login/status')
+                .then(function (res) {
+
+                    if (res.data.status == false)
+                    {
+                        return false;
+                    }
+                    self.isLogin    = true;
+                    self.token      = res.data.token;
+                    self.username   = res.data.username;
+                    self.level      = res.data.level;
+                })
+                .catch(function () {
+
+                });
         }
     }
 </script>

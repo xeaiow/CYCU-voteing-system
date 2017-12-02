@@ -20,7 +20,7 @@
 <body>
 
     <div class="ui container">
-        <div id="app"></div>
+        <div id="app" v-cloak></div>
     </div>
 
     <script src="{{ asset('js/app.js') }}"></script>

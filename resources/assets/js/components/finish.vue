@@ -17,7 +17,7 @@
 
                     <div class="column" v-for="(item, index) in items" :key="index">
                         <div class="ui cards stackable">
-                            <div class="card pointer" @click="$router.push({path:'activity/'+ item._id})">
+                            <div class="card pointer" @click="$router.push({path: 'finished/' + item._id})">
                                 <div class="content">
                                     {{ item.title }}
                                 </div>
@@ -52,8 +52,8 @@
             }
         },
         mounted: function () {
-            axios.get('//127.0.0.1:8000/activity/get').then(response => {this.items = response.data;})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;this.level = response.data.level;console.log(response);})
+            axios.get('//127.0.0.1:8000/finished_activity/get').then(response => {this.items = response.data;})
+            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
         }
     }
 </script>

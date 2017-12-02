@@ -10,6 +10,8 @@ import ActivityId from '../components/ActivityId'
 import ActivityLists from '../components/ActivityLists'
 import ActivityIdGroup from '../components/ActivityIdGroup'
 import Login from '../components/Login'
+import finish from '../components/finish';
+import finishId from '../components/finishId';
 
 
 export default new Router({
@@ -25,6 +27,14 @@ export default new Router({
         {
             path: '/about',
             component: About
+        },
+        {
+            path: '/finished',
+            component: finish
+        },
+        {
+            path: '/finished/:id',
+            component: finishId
         },
         {
             path: '/activity',

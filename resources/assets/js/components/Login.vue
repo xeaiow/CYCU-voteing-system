@@ -52,17 +52,20 @@
 
                 var username;
                 var token;
+                var level;
                 var router = this.$router;
                 var self = this;
 
                 axios.post('//127.0.0.1:8000/login/handle', {
                     username: this.username,
-                    password: this.password
+                    password: this.password,
+                    level: this.level
 
                 })
                 .then(function (response) {          
-                    
+
                     // 登入失敗
+                    
                     if (response.data.login_status != 1 && response.data.login_status != 2)
                     {
                         self.$swal({
@@ -74,28 +77,20 @@
                         return false;
                     }
 
-                    if (response.data.info !== undefined)
-                    {
-                        username = response.data.info.substr(3, 8);
-                        axios.post('//127.0.0.1:8000/login/save', {
-                            username: username
-                        });
-                    }
-                    else
-                    {
-                        // 注入 token 跟學號資訊
-                        token = response.data.token;
-                        username = response.data.username;
-                        
-                        router.push('/');
-                    }
-
+                    // 注入 token 跟學號資訊
+                    token    = response.data.token;
+                    username = response.data.username;
+                    level    = response.data.class.substr(-4); 
+                    
+                    // TODO: 回傳後再更新抓到的學生資料
                     self.$swal({
                         title: "驗證成功！",
                         text: "可以開始投票了。",
                         type: "success",
                         confirmButtonText: "好的",
                     });
+
+                    router.push('/');
                 });
             },
             logout: function () {

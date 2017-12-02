@@ -6,11 +6,15 @@
 
 Route::get('/activity/get', 'VoteController@get_activity');
 
+Route::get('/finished_activity/get', 'VoteController@get_finished_activity');
+
 Route::get('/activity/info/{id}', 'VoteController@get_activity_info');
 
 Route::get('/groups/get', 'VoteController@get_groups');
 
 Route::get('/groups/info/{id}', 'VoteController@get_groups_info');
+
+Route::get('/groups/top/{id}', 'VoteController@get_groups_top');
 
 Route::get('/group/info/{id}', 'VoteController@get_group_info');
 
@@ -20,11 +24,14 @@ Route::post('/login/handle', 'SystemController@login_handle');
 
 Route::get('/login/status', 'SystemController@login_status');
 
-Route::get('/logout', 'SystemController@logout_handle');
-
 Route::post('/login/save', 'SystemController@login_save_handle');
 
-Route::get('/voting/{id}', 'VoteController@voting_handle');
+
+Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
+
+    Route::get('/voting/{id}', 'VoteController@voting_handle');
+    Route::get('/logout', 'SystemController@logout_handle');
+});
 
 // Route::get('/login', 'SystemController@login');
 

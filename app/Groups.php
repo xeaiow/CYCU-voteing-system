@@ -8,5 +8,5 @@ class Groups extends Eloquent
 {
     protected $primaryKey = '_id';
     protected $collection = 'groups';
-    protected $fillable = ['id', 'activity', 'groups', 'img'];
+    protected $fillable = ['id', 'activity', 'groups', 'img', 'count'];
 }

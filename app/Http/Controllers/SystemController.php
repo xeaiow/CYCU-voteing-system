@@ -66,8 +66,6 @@ class SystemController extends Controller
     // 登入作業
     public function login_handle (Request $request)
     {
-        // $getUserInfo = Users::Where('username', $request->username);
-
         $url        = "http://cmap.cycu.edu.tw:8080//MyMentor/stdLogin.do" ;
         $ref_url    = "http://cmap.cycu.edu.tw:8080/MyMentor/courseCreditStructure.do";
         $userId     = $request->username;
@@ -109,6 +107,7 @@ class SystemController extends Controller
         
         preg_match_all("/\<div id=\"selectbox\"\>(.*?)\<\/div\>/is", $orders, $arr);
 
+
         // 判斷是否成功登入 iTouch
         if (empty($arr[0]) == 1)
         {
@@ -116,6 +115,8 @@ class SystemController extends Controller
         }
         else
         {
+            $str = preg_replace('/\s+/', '', strip_tags($arr[0][0]));
+
             // 產生一組新的 token
             $token = md5(uniqid(rand()));
             
@@ -127,14 +128,22 @@ class SystemController extends Controller
                 // 新增學生資料
                 $profile = [
                     'username' => $userId,
-                    'token' => $token
+                    'token' => $token,
+                    'class' => $str
                 ];
 
-                Users::create($profile);
+                $create_id = Users::create($profile)->id;
+
+                // 新增系級資訊
+                $profile = Users::Where('_id', $create_id);
+                $profile->update(['level' => mb_substr($profile->first()['class'], -4)]);
+
+                Session::put('level', mb_substr($profile->first()['class'], -4));
             }
             else
             {
                 $getUserInfo->update(['token' => $token]);
+                Session::put('level', $getUserInfo->first()['level']);
             }
 
             // 給予 token 跟 username 的 session
@@ -145,14 +154,21 @@ class SystemController extends Controller
             $result = $getUserInfo->first();
             $result['login_status'] = 1;
         }
-
         echo json_encode($result);
     }
 
     // 判斷登入狀態
     public function login_status ()
     {
-        echo Users::Where('username', Session::get('username'))->Where('token', Session::get('token'))->first();
+        $getLoginInfo = Users::Where('username', Session::get('username'))->Where('token', Session::get('token'));
+        
+        if ($getLoginInfo->count() == 1)
+        {
+            return $getLoginInfo->first();
+        }
+
+        $response['status'] = false;
+        return $response;
     }
 
     // 登出

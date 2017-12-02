@@ -34,3 +34,7 @@ body {
 .margin-80 {
     margin-top: 80px;
 }
+
+[v-cloak] {
+    display: none;
+}
