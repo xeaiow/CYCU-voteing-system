@@ -55,7 +55,7 @@
                     <i class="image icon"></i> 海報預覽
                 </h4>
                 <div class="ui fluid images">
-                    <img v-for="(item, index) in items.photo" :key="index" v-bind:src="item" class="team-images" />
+                    <img v-img:name v-for="(item, index) in items.photo" :key="index" v-bind:src="item" class="team-images" />
                 </div>
             </div>
           

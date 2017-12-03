@@ -35,6 +35,10 @@ body {
     margin-top: 80px;
 }
 
+.margin-20 {
+    margin-top: 40px !important;
+}
+
 [v-cloak] {
     display: none;
 }

@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueImg from 'v-img'
 
 Vue.use(Router)
+
+const vueImgConfig = {
+    // Use `alt` attribute as gallery slide title
+    altAsTitle: true,
+    // Display 'download' button near 'close' that opens source image in new tab
+    sourceButton: false,
+    // Event listener to open gallery will be applied to <img> element
+    openOn: 'click',
+}
+
+Vue.use(VueImg, vueImgConfig);
 
 import Example from '../components/Example'
 import About from '../components/About'
