@@ -13,6 +13,7 @@ const vueImgConfig = {
     openOn: 'click',
 }
 
+
 Vue.use(VueImg, vueImgConfig);
 
 import Example from '../components/Example'
@@ -24,6 +25,7 @@ import ActivityIdGroup from '../components/ActivityIdGroup'
 import Login from '../components/Login'
 import finish from '../components/finish';
 import finishId from '../components/finishId';
+import Pineapple from '../components/Pineapple';
 
 
 export default new Router({
@@ -61,6 +63,10 @@ export default new Router({
             path: '/group/:id',
             props: true,
             component: ActivityIdGroup
+        },
+        {
+            path: '/pineapple',
+            component: Pineapple
         }
     ]
 })

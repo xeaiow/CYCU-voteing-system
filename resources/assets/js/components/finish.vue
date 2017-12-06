@@ -1,4 +1,5 @@
 <template>
+
     <div>
         <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
             <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>

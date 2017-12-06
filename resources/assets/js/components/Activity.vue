@@ -13,6 +13,7 @@
 
         <div class="ui grid cycuvote-container">
             <div class="sixteen wide column">
+                
                 <div class="ui stackable three column grid">
 
                     <div class="column" v-for="(item, index) in items" :key="index">
