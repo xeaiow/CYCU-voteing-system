@@ -26,6 +26,8 @@ Route::get('/login/status', 'SystemController@login_status');
 
 Route::post('/login/save', 'SystemController@login_save_handle');
 
+Route::post('/activity/create', 'PineappleController@activity_create');
+
 
 Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
 

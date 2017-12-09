@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueImg from 'v-img'
+import SuiVue from 'semantic-ui-vue';
 
+Vue.use(SuiVue);
 Vue.use(Router)
 
 const vueImgConfig = {

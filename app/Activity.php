@@ -8,5 +8,5 @@ class Activity extends Eloquent
 {
     protected $primaryKey = '_id';
     protected $collection = 'activity';
-    protected $fillable = ['id', 'title', 'description', 'scope', 'start', 'end'];
+    protected $fillable = ['id', 'title', 'description', 'voter', 'img', 'started', 'deadline'];
 }

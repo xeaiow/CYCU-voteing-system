@@ -20,6 +20,7 @@
     "vue2-simplert": "^0.5.8"
   },
   "dependencies": {
+    "semantic-ui-vue": "^0.1.1",
     "sweetalert2": "^6.11.4",
     "v-img": "^0.1.9",
     "vue-router": "^3.0.1",
