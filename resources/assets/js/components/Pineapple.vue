@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="ui top fixed menu inverted">
-        <a class="item">中原資管投票管理後臺</a>
-        <a class="item">活動</a>
-        <a class="item">系統</a>
+            <a class="item">中原資管投票管理後臺</a>
+            <a class="item">活動</a>
+            <a class="item">系統</a>
         </div>
         
 
@@ -18,40 +18,67 @@
             </div>
             <div class="thirteen wide column">
                 <div class="ui segment">
+
+                    <h4 class="ui horizontal divider header">活動海報</h4>
+
+                    <div class="ui grid">
+                        <div class="sixteen wide column" v-if="!image">
+                            <input type="file" @change="onFileChange">
+                        </div>
+                        <div class="sixteen wide column center aligned" v-else>
+                            <img :src="image" class="ui image medium" />
+                            <button class="ui icon button red" @click="removeImage"><i class="minus icon"></i></button>
+                        </div>
+                    </div>
+
                     <sui-form>
+                        <input name="_token" hidden value="{!! csrf_token() !!}" />
+                        <h4 class="ui horizontal divider header margin-20">活動資訊</h4>
                         <sui-form-field>
-                            <label>活動名稱</label>
+                            <label>標題</label>
                             <input type="text" v-model="title" />
                         </sui-form-field>
+
                         <sui-form-field>
                             <label>描述</label>
                             <textarea v-model="description"></textarea>
                         </sui-form-field>
+
+                        <h4 class="ui horizontal divider header margin-20">適用對象</h4>
+
                         <sui-form-field>
-                            <label>適用對象</label>
                             <sui-checkbox v-model="permission[0]" label="大一" />
                             <sui-checkbox v-model="permission[1]" label="大二" />
                             <sui-checkbox v-model="permission[2]" label="大三" />
                             <sui-checkbox v-model="permission[3]" label="大四" />
                         </sui-form-field>
+
+                        <h4 class="ui horizontal divider header margin-20">活動時間</h4>
+
                         <div class="fields">
-                            <div class="six wide field">
-                                <label>開始時間</label>
+                            <div class="eight wide field">
+                                <label>開始</label>
                                 <div class="ui input left icon">
                                     <i class="calendar icon"></i>
                                     <input type="date" v-model="started" />
                                 </div>
                             </div>
-                            <div class="six wide field">
-                                <label>結束時間</label>
+                            <div class="eight wide field">
+                                <label>結束</label>
                                 <div class="ui input left icon">
                                     <i class="calendar icon"></i>
                                     <input type="date" v-model="deadline" />
                                 </div>
                             </div>
                         </div>
+
                     </sui-form>
-                    <button type="button" class="ui button success" @click="create_activity">確定</button>
+
+                    <div class="ui grid">
+                        <div class="sixteen wide column">
+                            <button type="button" class="ui button basic fluid" v-if="image_url != ''" @click="create_activity">新增</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,12 +94,15 @@
                 title: '',
                 description: '',
                 started: '',
-                deadline: ''
+                deadline: '',
+                image: '',
+                image_url: ''
             }
         },
         methods: {
             create_activity: function () {
 
+                var self = this;
                 var dept = [ "資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
                 
                 for (var i = 0; i < 4; i++)
@@ -108,16 +138,61 @@
                         title: this.title,
                         description: this.description,
                         voter: this.voter,
+                        img: this.image_url,
                         started: this.started,
                         deadline: this.deadline
                     }
                 })
                 .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
+                    
+                    let link = response.data;
+
+                    self.$swal({
+                        title: "新增成功！",
+                        text: "請接續新增組別。",
+                        confirmButtonText: "知道了",
+                    }).then(function (res) {
+
+                        self.$router.push('/pineapple/groups/create/' + link);
+                    });
                 });
+            },
+            onFileChange: function (e)
+            {
+                
+                var files = e.target.files || e.dataTransfer.files;
+                if (!files.length)
+                    return;
+                this.createImage(files[0]);
+            },
+            createImage(file) {
+
+                var image = new Image();
+                var reader = new FileReader();
+
+                reader.onload = (e) => {
+
+                    this.image = e.target.result;
+                    var self = this;
+                    axios({
+                        method: 'post',
+                        url: '//127.0.0.1:8000/image/upload',
+                        headers: {
+                            'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                        },
+                        data: {
+                            userImage: this.image,
+                        }
+                    })
+                    .then(function (res) {
+                        self.image_url = res.data.data.link;
+                    });
+                };
+                reader.readAsDataURL(file);
+            },
+            removeImage: function (e) {
+                
+                this.image = '';
             }
         },
         mounted: function () {

@@ -16,15 +16,32 @@ class PineappleController extends Controller
     public function activity_create (Request $request)
     {
         
-        $activity = [
+        $data = [
             'title' => $request->title,
             'description' => $request->description,
             'voter' => $request->voter,
-            'img' => 'https://static.collectui.com/shots/3874110/the-night-king-large',
+            'img' => $request->img,
             'started' => $request->started,
             'deadline' => $request->deadline
         ];
 
-        Activity::create($activity);
+        $Activity = Activity::create($data);
+        echo $Activity->id;
+    }
+
+    // imgur 可多張圖片上傳
+    public function upload_image (Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('POST', 'https://api.imgur.com/3/image', [
+                'headers' => [
+                    'authorization' => 'Client-ID ' . '5f2eaa3314e3d73',
+                    'content-type' => 'application/x-www-form-urlencoded',
+                ],
+                'form_params' => [
+                    'image' => base64_encode(file_get_contents($request->userImage))
+                ],
+            ]);
+        return response()->json(json_decode(($response->getBody()->getContents())));
     }
 }

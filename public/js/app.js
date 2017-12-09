@@ -47662,6 +47662,8 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_finishId___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__components_finishId__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_Pineapple__ = __webpack_require__(415);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_Pineapple___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__components_Pineapple__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate__ = __webpack_require__(436);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate__);
 
 
 
@@ -47680,6 +47682,7 @@ var vueImgConfig = {
 };
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_v_img__["a" /* default */], vueImgConfig);
+
 
 
 
@@ -47723,6 +47726,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_2_v_im
     }, {
         path: '/pineapple',
         component: __WEBPACK_IMPORTED_MODULE_13__components_Pineapple___default.a
+    }, {
+        path: '/pineapple/groups/create/:id',
+        props: true,
+        component: __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate___default.a
     }]
 }));
 
@@ -63016,6 +63023,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -63025,12 +63059,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             title: '',
             description: '',
             started: '',
-            deadline: ''
+            deadline: '',
+            image: '',
+            image_url: ''
         };
     },
     methods: {
         create_activity: function create_activity() {
 
+            var self = this;
             var dept = ["資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
 
             for (var i = 0; i < 4; i++) {
@@ -63063,14 +63100,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     title: this.title,
                     description: this.description,
                     voter: this.voter,
+                    img: this.image_url,
                     started: this.started,
                     deadline: this.deadline
                 }
             }).then(function (response) {
-                console.log(response);
-            }).catch(function (error) {
-                console.log(error);
+
+                var link = response.data;
+
+                self.$swal({
+                    title: "新增成功！",
+                    text: "請接續新增組別。",
+                    confirmButtonText: "知道了"
+                }).then(function (res) {
+
+                    self.$router.push('/pineapple/groups/create/' + link);
+                });
             });
+        },
+        onFileChange: function onFileChange(e) {
+
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.createImage(files[0]);
+        },
+        createImage: function createImage(file) {
+            var _this = this;
+
+            var image = new Image();
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                _this.image = e.target.result;
+                var self = _this;
+                axios({
+                    method: 'post',
+                    url: '//127.0.0.1:8000/image/upload',
+                    headers: {
+                        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                    },
+                    data: {
+                        userImage: _this.image
+                    }
+                }).then(function (res) {
+                    self.image_url = res.data.data.link;
+                });
+            };
+            reader.readAsDataURL(file);
+        },
+
+        removeImage: function removeImage(e) {
+
+            this.image = '';
         }
     },
     mounted: function mounted() {}
@@ -63095,11 +63177,58 @@ var render = function() {
           "div",
           { staticClass: "ui segment" },
           [
+            _c("h4", { staticClass: "ui horizontal divider header" }, [
+              _vm._v("活動海報")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "ui grid" }, [
+              !_vm.image
+                ? _c("div", { staticClass: "sixteen wide column" }, [
+                    _c("input", {
+                      attrs: { type: "file" },
+                      on: { change: _vm.onFileChange }
+                    })
+                  ])
+                : _c(
+                    "div",
+                    { staticClass: "sixteen wide column center aligned" },
+                    [
+                      _c("img", {
+                        staticClass: "ui image medium",
+                        attrs: { src: _vm.image }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "ui icon button red",
+                          on: { click: _vm.removeImage }
+                        },
+                        [_c("i", { staticClass: "minus icon" })]
+                      )
+                    ]
+                  )
+            ]),
+            _vm._v(" "),
             _c(
               "sui-form",
               [
+                _c("input", {
+                  attrs: {
+                    name: "_token",
+                    hidden: "",
+                    value: "{!! csrf_token() !!}"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("活動資訊")]
+                ),
+                _vm._v(" "),
                 _c("sui-form-field", [
-                  _c("label", [_vm._v("活動名稱")]),
+                  _c("label", [_vm._v("標題")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -63148,10 +63277,14 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("適用對象")]
+                ),
+                _vm._v(" "),
+                _c(
                   "sui-form-field",
                   [
-                    _c("label", [_vm._v("適用對象")]),
-                    _vm._v(" "),
                     _c("sui-checkbox", {
                       attrs: { label: "大一" },
                       model: {
@@ -63199,9 +63332,15 @@ var render = function() {
                   1
                 ),
                 _vm._v(" "),
+                _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("活動時間")]
+                ),
+                _vm._v(" "),
                 _c("div", { staticClass: "fields" }, [
-                  _c("div", { staticClass: "six wide field" }, [
-                    _c("label", [_vm._v("開始時間")]),
+                  _c("div", { staticClass: "eight wide field" }, [
+                    _c("label", [_vm._v("開始")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "ui input left icon" }, [
                       _c("i", { staticClass: "calendar icon" }),
@@ -63229,8 +63368,8 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "six wide field" }, [
-                    _c("label", [_vm._v("結束時間")]),
+                  _c("div", { staticClass: "eight wide field" }, [
+                    _c("label", [_vm._v("結束")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "ui input left icon" }, [
                       _c("i", { staticClass: "calendar icon" }),
@@ -63262,15 +63401,21 @@ var render = function() {
               1
             ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "ui button success",
-                attrs: { type: "button" },
-                on: { click: _vm.create_activity }
-              },
-              [_vm._v("確定")]
-            )
+            _c("div", { staticClass: "ui grid" }, [
+              _c("div", { staticClass: "sixteen wide column" }, [
+                _vm.image_url != ""
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "ui button basic fluid",
+                        attrs: { type: "button" },
+                        on: { click: _vm.create_activity }
+                      },
+                      [_vm._v("新增")]
+                    )
+                  : _vm._e()
+              ])
+            ])
           ],
           1
         )
@@ -64284,6 +64429,164 @@ var index_esm = {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(438)
+/* template */
+var __vue_template__ = __webpack_require__(437)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\GroupsCreate.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-10525ee7", Component.options)
+  } else {
+    hotAPI.reload("data-v-10525ee7", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 437 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("div", { staticClass: "ui top fixed menu inverted" }, [
+        _c("a", { staticClass: "item" }, [_vm._v("中原資管投票管理後臺")]),
+        _vm._v(" "),
+        _c("a", { staticClass: "item" }, [_vm._v("活動")]),
+        _vm._v(" "),
+        _c("a", { staticClass: "item" }, [_vm._v("系統")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "ui grid cycuvote-container" }, [
+        _c("div", { staticClass: "three wide column" }, [
+          _c("div", { staticClass: "ui inverted vertical menu" }, [
+            _c("a", { staticClass: "active item" }, [
+              _c("i", { staticClass: "icon plus" }),
+              _vm._v("新增")
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "item" }, [
+              _c("i", { staticClass: "icon tasks" }),
+              _vm._v("列表")
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "thirteen wide column" }, [
+          _c("div", { staticClass: "ui segment" })
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-10525ee7", module.exports)
+  }
+}
+
+/***/ }),
+/* 438 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {},
+    methods: {},
+    mounted: function mounted() {}
+});
 
 /***/ })
 /******/ ]);

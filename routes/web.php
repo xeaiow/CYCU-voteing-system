@@ -28,6 +28,7 @@ Route::post('/login/save', 'SystemController@login_save_handle');
 
 Route::post('/activity/create', 'PineappleController@activity_create');
 
+Route::post('/image/upload', 'PineappleController@upload_image');
 
 Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
 

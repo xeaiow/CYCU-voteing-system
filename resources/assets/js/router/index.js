@@ -28,6 +28,7 @@ import Login from '../components/Login'
 import finish from '../components/finish';
 import finishId from '../components/finishId';
 import Pineapple from '../components/Pineapple';
+import GroupsCreate from '../components/GroupsCreate';
 
 
 export default new Router({
@@ -69,6 +70,11 @@ export default new Router({
         {
             path: '/pineapple',
             component: Pineapple
+        },
+        {
+            path: '/pineapple/groups/create/:id',
+            props: true,
+            component: GroupsCreate
         }
     ]
 })
