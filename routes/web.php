@@ -30,6 +30,10 @@ Route::post('/activity/create', 'PineappleController@activity_create');
 
 Route::post('/image/upload', 'PineappleController@upload_image');
 
+Route::get('/pineapple/activity/create/{id}/get', 'PineappleController@get_activity_create');
+
+Route::post('/pineapple/groups/create', 'PineappleController@finished_groups_create');
+
 Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
 
     Route::get('/voting/{id}', 'VoteController@voting_handle');

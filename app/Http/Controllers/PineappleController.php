@@ -33,15 +33,43 @@ class PineappleController extends Controller
     public function upload_image (Request $request)
     {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'https://api.imgur.com/3/image', [
+        $result = array();
+
+        foreach ((array) $request->userImage as $index => $tmpName)
+        {
+            $result[] = json_decode($client->request('POST', 'https://api.imgur.com/3/image', [
                 'headers' => [
                     'authorization' => 'Client-ID ' . '5f2eaa3314e3d73',
                     'content-type' => 'application/x-www-form-urlencoded',
                 ],
                 'form_params' => [
-                    'image' => base64_encode(file_get_contents($request->userImage))
+                    'image' => base64_encode(file_get_contents($tmpName))
                 ],
-            ]);
-        return response()->json(json_decode(($response->getBody()->getContents())));
+            ])->getBody()->getContents());
+        }
+
+        
+        return response()->json(($result));
+    }
+
+    // 取得未新增組別的活動資訊
+    public function get_activity_create (Request $request)
+    {
+        echo Activity::Where('_id', $request->id)->first();
+    } 
+
+    // 在活動中新增組別
+    public function finished_groups_create (Request $request)
+    {
+        $data = [
+            'activity' => $request->activity,
+            'groups' => $request->groups,
+            'description' => $request->description,
+            'photo' => $request->cover,
+            'img' => $request->img,
+            'count' => 1
+        ];
+
+        Groups::create($data);
     }
 }

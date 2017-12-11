@@ -45680,7 +45680,7 @@ exports.default = {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(126);
-module.exports = __webpack_require__(420);
+module.exports = __webpack_require__(423);
 
 
 /***/ }),
@@ -45694,7 +45694,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_App__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_App__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(133);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(418);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(421);
 __webpack_require__(41);
 __webpack_require__(127);
 
@@ -47662,7 +47662,7 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__components_finishId___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__components_finishId__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_Pineapple__ = __webpack_require__(415);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_Pineapple___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__components_Pineapple__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate__ = __webpack_require__(436);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate__ = __webpack_require__(418);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__components_GroupsCreate__);
 
 
@@ -63466,12 +63466,526 @@ if (false) {
 
 /***/ }),
 /* 418 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(419)
+/* template */
+var __vue_template__ = __webpack_require__(420)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\GroupsCreate.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-10525ee7", Component.options)
+  } else {
+    hotAPI.reload("data-v-10525ee7", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 419 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            info: [],
+            groups: '',
+            description: '',
+            image: [],
+            image_url: '',
+            cover: ''
+        };
+    },
+    methods: {
+        onFileChange: function onFileChange(e) {
+
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.createImage(files[0]);
+        },
+        createImage: function createImage(file) {
+            var _this = this;
+
+            var image = new Image();
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                _this.image.push(e.target.result);
+            };
+
+            reader.readAsDataURL(file);
+            document.getElementById("select-img").value = "";
+            this.$swal({
+                title: "選取成功！",
+                text: "如需增加圖片請繼續選取，完成後請點擊上傳。",
+                confirmButtonText: "知道了"
+            });
+        },
+
+        uploadImage: function uploadImage() {
+
+            var self = this;
+            axios({
+                method: 'post',
+                url: '//127.0.0.1:8000/image/upload',
+                headers: {
+                    'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                },
+                data: {
+                    userImage: this.image
+                }
+            }).then(function (res) {
+
+                self.image = res.data[0].data.link;
+                self.$swal({
+                    title: "上傳成功！",
+                    text: "輸入相關資料後，點擊送出完成新增。",
+                    confirmButtonText: "知道了"
+                });
+            });
+        },
+        removeImage: function removeImage(e) {
+
+            this.image = '';
+        },
+        onCoverChange: function onCoverChange(e) {
+
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.coverImage(files[0]);
+        },
+        coverImage: function coverImage(file) {
+            var _this2 = this;
+
+            var image = new Image();
+            var reader = new FileReader();
+            var self = this;
+
+            reader.onload = function (e) {
+
+                _this2.cover = e.target.result;
+
+                axios({
+                    method: 'post',
+                    url: '//127.0.0.1:8000/image/upload',
+                    headers: {
+                        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                    },
+                    data: {
+                        userImage: _this2.cover
+                    }
+                }).then(function (res) {
+
+                    self.cover = res.data[0].data.link;
+                });
+            };
+
+            reader.readAsDataURL(file);
+        },
+        finished: function finished() {
+
+            var router = this.$router;
+            axios({
+                method: 'post',
+                url: '//127.0.0.1:8000/pineapple/groups/create',
+                headers: {
+                    'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                },
+                data: {
+                    activity: this.$route.params.id,
+                    groups: this.groups,
+                    description: this.description,
+                    cover: this.cover,
+                    img: this.image
+                }
+            }).then(function (res) {
+
+                console.log('success');
+            });
+        }
+    },
+    mounted: function mounted() {
+        var _this3 = this;
+
+        var router = this.$router;
+        axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(function (response) {
+            _this3.info = response.data;console.log(_this3.info);
+        });
+    }
+});
+
+/***/ }),
+/* 420 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "ui grid cycuvote-container" }, [
+      _c("div", { staticClass: "eight wide column" }, [
+        _c("div", { staticClass: "ui segment" }, [
+          _c("h2", { staticClass: "ui icon header" }, [
+            _vm._v("活動名稱：" + _vm._s(_vm.info.title))
+          ]),
+          _vm._v(" "),
+          _c("img", {
+            staticClass: "ui image medium centered",
+            attrs: { src: _vm.info.img }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui large header" }, [_vm._v("描述")]),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(_vm.info.description))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui large header" }, [_vm._v("活動時間")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(_vm._s(_vm.info.started) + " ~ " + _vm._s(_vm.info.deadline))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "ui large header" }, [_vm._v("參與群組")]),
+          _vm._v(" "),
+          _c("p"),
+          _c(
+            "div",
+            { staticClass: "ui list" },
+            _vm._l(_vm.info.voter, function(item, index) {
+              return _c("div", { key: index, staticClass: "item" }, [
+                _vm._v(_vm._s(item))
+              ])
+            })
+          ),
+          _vm._v(" "),
+          _c("p")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "eight wide column" }, [
+        _c(
+          "div",
+          { staticClass: "ui segment" },
+          [
+            _c(
+              "sui-form",
+              [
+                _c("input", {
+                  attrs: {
+                    name: "_token",
+                    hidden: "",
+                    value: "{!! csrf_token() !!}"
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("組別資料")]
+                ),
+                _vm._v(" "),
+                _c("sui-form-field", [
+                  _c("label", [_vm._v("組別名稱")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.groups,
+                        expression: "groups"
+                      }
+                    ],
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.groups },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.groups = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("sui-form-field", [
+                  _c("label", [_vm._v("描述")]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.description,
+                        expression: "description"
+                      }
+                    ],
+                    domProps: { value: _vm.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.description = $event.target.value
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("封面")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "ui grid" }, [
+                  _vm.cover == ""
+                    ? _c("div", { staticClass: "sixteen wide column" }, [
+                        _c("input", {
+                          attrs: { type: "file" },
+                          on: { change: _vm.onCoverChange }
+                        })
+                      ])
+                    : _c(
+                        "div",
+                        { staticClass: "sixteen wide column center aligned" },
+                        [
+                          _c("img", {
+                            staticClass: "ui image medium centered",
+                            attrs: { src: _vm.cover }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "ui icon button red",
+                              on: { click: _vm.onCoverChange }
+                            },
+                            [_c("i", { staticClass: "minus icon tiny" })]
+                          )
+                        ]
+                      )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "h4",
+                  { staticClass: "ui horizontal divider header margin-20" },
+                  [_vm._v("海報 (可多張)")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "ui grid" }, [
+                  _c("div", { staticClass: "sixteen wide column" }, [
+                    _c("input", {
+                      attrs: { type: "file", id: "select-img", multiple: "" },
+                      on: { change: _vm.onFileChange }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "ui icon button basic tiny",
+                        on: { click: _vm.uploadImage }
+                      },
+                      [_vm._v("上傳")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm.image
+                    ? _c(
+                        "div",
+                        { staticClass: "sixteen wide column center aligned" },
+                        [
+                          _c("img", {
+                            staticClass: "ui image medium centered",
+                            attrs: { src: _vm.image }
+                          })
+                        ]
+                      )
+                    : _vm._e()
+                ])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "ui grid" }, [
+              _c("div", { staticClass: "sixteen wide column" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "ui button basic fluid",
+                    attrs: { type: "button" },
+                    on: { click: _vm.finished }
+                  },
+                  [_vm._v("完成")]
+                )
+              ])
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ui top fixed menu inverted" }, [
+      _c("a", { staticClass: "item" }, [_vm._v("中原資管投票管理後臺")]),
+      _vm._v(" "),
+      _c("a", { staticClass: "item" }, [_vm._v("活動")]),
+      _vm._v(" "),
+      _c("a", { staticClass: "item" }, [_vm._v("系統")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-10525ee7", module.exports)
+  }
+}
+
+/***/ }),
+/* 421 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(419);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(422);
 
 
 
@@ -63480,7 +63994,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({}));
 
 /***/ }),
-/* 419 */
+/* 422 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64425,168 +64939,10 @@ var index_esm = {
 
 
 /***/ }),
-/* 420 */
+/* 423 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(438)
-/* template */
-var __vue_template__ = __webpack_require__(437)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\GroupsCreate.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-10525ee7", Component.options)
-  } else {
-    hotAPI.reload("data-v-10525ee7", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 437 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "ui top fixed menu inverted" }, [
-        _c("a", { staticClass: "item" }, [_vm._v("中原資管投票管理後臺")]),
-        _vm._v(" "),
-        _c("a", { staticClass: "item" }, [_vm._v("活動")]),
-        _vm._v(" "),
-        _c("a", { staticClass: "item" }, [_vm._v("系統")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "ui grid cycuvote-container" }, [
-        _c("div", { staticClass: "three wide column" }, [
-          _c("div", { staticClass: "ui inverted vertical menu" }, [
-            _c("a", { staticClass: "active item" }, [
-              _c("i", { staticClass: "icon plus" }),
-              _vm._v("新增")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "item" }, [
-              _c("i", { staticClass: "icon tasks" }),
-              _vm._v("列表")
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "thirteen wide column" }, [
-          _c("div", { staticClass: "ui segment" })
-        ])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-10525ee7", module.exports)
-  }
-}
-
-/***/ }),
-/* 438 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {},
-    methods: {},
-    mounted: function mounted() {}
-});
 
 /***/ })
 /******/ ]);

@@ -196,7 +196,6 @@
             }
         },
         mounted: function () {
-            
         }
     }
 </script>
