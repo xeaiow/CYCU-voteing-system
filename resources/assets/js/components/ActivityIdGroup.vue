@@ -3,6 +3,7 @@
         <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
             <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
             <a class="item font-style" @click="$router.push('/')">活動列表</a>
+            <a class="item font-style" @click="$router.push('/finished')">公佈欄</a>
             <div class="right menu">
                 <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
                 <a class="item font-style" v-if="token" @click="logout">登出</a>
@@ -25,15 +26,17 @@
                     <div class="ui segment basic">
                         <div class="ui list">
                             <div class="item">
-                                <i class="user icon"></i>
-                                <div class="content font-style">
-                                    {{ activitys.permission }}
-                                </div>
-                            </div>
-                            <div class="item">
                                 <i class="calendar icon"></i>
                                 <div class="content font-style">
                                     {{ activitys.started }} ~ {{ activitys.deadline }}
+                                </div>
+                            </div>
+                            <div class="item">
+                                <i class="user icon"></i>
+                                <div class="content font-style">
+                                    <div class="ui list">
+                                        <div class="item" v-for="(voter, index) in activitys.voter" :key="index">{{ voter }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +52,7 @@
             </div>
             <div class="twelve wide column">
                 <div class="ui piled segment project-content-text">
-                    {{ items.discription }}
+                    {{ items.description }}
                 </div>
                 <h4 class="ui horizontal divider header">
                     <i class="image icon"></i> 海報預覽
@@ -86,7 +89,7 @@
                 this.$swal(text, '', type)
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('//140.135.112.191/logout')
                 this.$router.go('/');
             },
             login: function () {
@@ -118,7 +121,7 @@
                             return false;
                         }
 
-                        axios.get('//127.0.0.1:8000/voting/' + selfRoute)
+                        axios.get('//140.135.112.191/voting/' + selfRoute)
                         .then(function (res) {
 
                             if (res.data.status == true)
@@ -140,14 +143,15 @@
             var self    = this;
             var router  = this.$router;
 
-            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (res) 
+            axios.get('//140.135.112.191/group/info/' + this.$route.params.id).then(function (res) 
                 {
                     self.items = res.data.info;
                     self.voting = res.data.voting;
                     self.message = res.data.status;
+                    console.log(self.items);
                 });
-            axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
-            axios.get('//127.0.0.1:8000/login/status')
+            axios.get('//140.135.112.191/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
+            axios.get('//140.135.112.191/login/status')
                 .then(function (res) {
 
                     if (res.data.status == false)

@@ -95,6 +95,7 @@
                 info: [],
                 groups: '',
                 description: '',
+                image_tmp: [],
                 image: [],
                 image_url: '',
                 cover: ''  
@@ -116,7 +117,7 @@
 
                 reader.onload = (e) => {
 
-                    this.image.push(e.target.result);
+                    this.image_tmp.push(e.target.result);
                 };
                
                 reader.readAsDataURL(file);    
@@ -132,17 +133,22 @@
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/image/upload',
+                    url: '//140.135.112.191/image/upload',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
                     data: {
-                        userImage: this.image,
+                        userImage: this.image_tmp,
                     }
                 })
                 .then(function (res) {
                     
-                    self.image = res.data[0].data.link;
+                    var data = res.data;
+                    for (var i =0; i< data.length; i++) {
+                        
+                        self.image.push(data[i].data.link);
+                    }
+                    
                     self.$swal({
                         title: "上傳成功！",
                         text: "輸入相關資料後，點擊送出完成新增。",
@@ -173,7 +179,7 @@
 
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '//140.135.112.191/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -192,10 +198,11 @@
             },
             finished: function () {
 
+                var self    = this;
                 var router  = this.$router;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/pineapple/groups/create',
+                    url: '//140.135.112.191/pineapple/groups/create',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -204,19 +211,28 @@
                         groups: this.groups,
                         description: this.description,
                         cover: this.cover,
-                        img: this.image
+                        photo: this.image
                     }
                 })
                 .then(function (res) {
 
-                    console.log('success');
+                    self.$swal({
+                        title: "新增完成！",
+                        text: "如有其他資料，請接續新增即可。",
+                        confirmButtonText: "知道了",
+                    });
+                    self.activity = '';
+                    self.groups = '';
+                    self.description = '';
+                    self.cover = '';
+                    self.photo = '';
                 });
             }
         },
         mounted: function () {
 
             var router  = this.$router;
-            axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data;console.log(this.info)})
+            axios.get('//140.135.112.191/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data;console.log(this.info)})
         }
     }
 </script>

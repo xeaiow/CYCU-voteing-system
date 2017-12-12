@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <div v-if="!message">
+            <div class="sixteen wide column centered center aligned" v-if="!message">
                 <div class="sixteen wide column">
                     <h2 class="ui icon header center aligned">
                         <i class="lab icon"></i>
@@ -33,26 +33,27 @@
                         <div class="sub header">{{ info.description }}</div>
                     </h2>
                 </div>
+            </div>
 
-                <div class="sixteen wide column">
+            <div class="sixteen wide column">
 
-                    <div class="ui stackable three column grid">
-                        <div class="column" v-for="(item, index) in items">
-                            <div class="ui cards stackable">
-                                <div class="card pointer" @click="$router.push({path:'/group/' + item._id})">
-                                    <div class="content">
-                                        <div class="ui top right attached label basic">{{ item.count }} 票</div>
-                                        {{ item.groups }}
-                                    </div>
-                                    <div class="image">
-                                        <img v-bind:src="item.img" />
-                                    </div>
+                <div class="ui stackable three column grid" v-if="!message">
+                    <div class="column" v-for="(item, index) in items">
+                        <div class="ui cards stackable">
+                            <div class="card pointer" @click="$router.push({path:'/group/' + item._id})">
+                                <div class="content">
+                                    <div class="ui top right attached label basic">{{ item.count }} 票</div>
+                                    {{ item.groups }}
+                                </div>
+                                <div class="image">
+                                    <img v-bind:src="item.img" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
 
         </div>
     </div>
@@ -72,13 +73,13 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('//140.135.112.191/logout')
                 this.$router.go('/');
             }
         },
         mounted: function() {
-            axios.get('//127.0.0.1:8000/groups/top/' + this.$route.params.id).then(response => {this.items = response.data.groups;this.info = response.data.activity;this.message = response.data.message;})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
+            axios.get('//140.135.112.191/groups/top/' + this.$route.params.id).then(response => {this.items = response.data.groups;this.info = response.data.activity;this.message = response.data.message;})
+            axios.get('//140.135.112.191/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
         }
     }
 </script>

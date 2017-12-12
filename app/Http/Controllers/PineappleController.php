@@ -65,9 +65,9 @@ class PineappleController extends Controller
             'activity' => $request->activity,
             'groups' => $request->groups,
             'description' => $request->description,
-            'photo' => $request->cover,
-            'img' => $request->img,
-            'count' => 1
+            'photo' => $request->photo,
+            'img' => $request->cover,
+            'count' => 0
         ];
 
         Groups::create($data);

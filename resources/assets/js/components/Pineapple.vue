@@ -133,7 +133,7 @@
 
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/activity/create',
+                    url: '//140.135.112.191/activity/create',
                     data: {
                         title: this.title,
                         description: this.description,
@@ -176,7 +176,7 @@
                     var self = this;
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '//140.135.112.191/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -185,7 +185,7 @@
                         }
                     })
                     .then(function (res) {
-                        self.image_url = res.data.data.link;
+                        self.image_url = res.data[0].data.link;
                     });
                 };
                 reader.readAsDataURL(file);

@@ -3,6 +3,7 @@
         <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
             <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
             <a class="item font-style" @click="$router.push('/')">活動列表</a>
+            <a class="item font-style" @click="$router.push('/finished')">公佈欄</a>
             <div class="right menu">
                 <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
                 <a class="item font-style" v-if="token" @click="logout">登出</a>
@@ -46,13 +47,13 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('//140.135.112.191/logout')
                 this.$router.go('/');
             }
         },
         methoded: function () {
-            axios.get('//127.0.0.1:8000/activity/get').then(response => {this.items = response.data})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
+            axios.get('//140.135.112.191/activity/get').then(response => {this.items = response.data})
+            axios.get('//140.135.112.191/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
         }
     }
 </script>
