@@ -4,6 +4,10 @@
             <a class="item">中原資管投票管理後臺</a>
             <a class="item">活動</a>
             <a class="item">系統</a>
+            <div class="right menu">
+                <a class="item font-style">{{ this.username }} 您好</a>
+                <a class="item font-style" v-if="token" @click="logout">登出</a>
+            </div>
         </div>
         
 
@@ -14,12 +18,13 @@
                     <a class="active item"><i class="icon plus"></i>新增</a>
                     <a class="item"><i class="icon tasks"></i>列表</a>
                 </div>
+                
                 <!-- MENU_END -->
             </div>
             <div class="thirteen wide column">
                 <div class="ui segment">
 
-                    <h4 class="ui horizontal divider header">活動海報</h4>
+                    <h4 class="ui horizontal divider header">1. 活動海報</h4>
 
                     <div class="ui grid">
                         <div class="sixteen wide column" v-if="!image">
@@ -33,7 +38,7 @@
 
                     <sui-form>
                         <input name="_token" hidden value="{!! csrf_token() !!}" />
-                        <h4 class="ui horizontal divider header margin-20">活動資訊</h4>
+                        <h4 class="ui horizontal divider header margin-20">2. 活動資訊</h4>
                         <sui-form-field>
                             <label>標題</label>
                             <input type="text" v-model="title" />
@@ -44,7 +49,7 @@
                             <textarea v-model="description"></textarea>
                         </sui-form-field>
 
-                        <h4 class="ui horizontal divider header margin-20">適用對象</h4>
+                        <h4 class="ui horizontal divider header margin-20">3. 適用對象</h4>
 
                         <sui-form-field>
                             <sui-checkbox v-model="permission[0]" label="大一" />
@@ -53,7 +58,7 @@
                             <sui-checkbox v-model="permission[3]" label="大四" />
                         </sui-form-field>
 
-                        <h4 class="ui horizontal divider header margin-20">活動時間</h4>
+                        <h4 class="ui horizontal divider header margin-20">4. 活動時間</h4>
 
                         <div class="fields">
                             <div class="eight wide field">
@@ -96,7 +101,9 @@
                 started: '',
                 deadline: '',
                 image: '',
-                image_url: ''
+                image_url: '',
+                token: '',
+                username: ''
             }
         },
         methods: {
@@ -133,7 +140,7 @@
 
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/activity/create',
+                    url: '//127.0.0.1:8000/activity/create',
                     data: {
                         title: this.title,
                         description: this.description,
@@ -176,7 +183,7 @@
                     var self = this;
                     axios({
                         method: 'post',
-                        url: '//140.135.112.191/image/upload',
+                        url: '//127.0.0.1:8000/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -193,9 +200,23 @@
             removeImage: function (e) {
                 
                 this.image = '';
+            },
+            logout: function () {
+                axios.get('//127.0.0.1:8000/pineapple/logout')
+                this.$router.go('/');
             }
         },
         mounted: function () {
+
+            var self = this;
+            var router = this.$router;
+
+            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            .then(function (res) {
+                
+                self.token = res.data.token;
+                self.username = res.data.username;
+            });
         }
     }
 </script>

@@ -29,6 +29,7 @@ import finish from '../components/finish';
 import finishId from '../components/finishId';
 import Pineapple from '../components/Pineapple';
 import GroupsCreate from '../components/GroupsCreate';
+import PineappleLogin from '../components/PineappleLogin';
 
 
 export default new Router({
@@ -68,8 +69,23 @@ export default new Router({
             component: ActivityIdGroup
         },
         {
+            path: '/pineapple/login',
+            component: PineappleLogin
+        },
+        {
             path: '/pineapple',
-            component: Pineapple
+            component: Pineapple,
+            beforeEnter: (to, from, next) => {
+                axios.get('//127.0.0.1:8000/pineapple/login/status').then(res => {
+
+                    if (res.data != "") {
+                        next();
+                        return false;
+                    }
+                    window.location.href = '/pineapple/login';
+
+                });
+            }
         },
         {
             path: '/pineapple/groups/create/:id',

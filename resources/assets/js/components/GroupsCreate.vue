@@ -133,7 +133,7 @@
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/image/upload',
+                    url: '//127.0.0.1:8000/image/upload',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -179,7 +179,7 @@
 
                     axios({
                         method: 'post',
-                        url: '//140.135.112.191/image/upload',
+                        url: '//127.0.0.1:8000/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -202,7 +202,7 @@
                 var router  = this.$router;
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/pineapple/groups/create',
+                    url: '//127.0.0.1:8000/pineapple/groups/create',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -232,7 +232,7 @@
         mounted: function () {
 
             var router  = this.$router;
-            axios.get('//140.135.112.191/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data;console.log(this.info)})
+            axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data})
         }
     }
 </script>

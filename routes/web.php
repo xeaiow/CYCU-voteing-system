@@ -30,15 +30,22 @@ Route::post('/activity/create', 'PineappleController@activity_create');
 
 Route::post('/image/upload', 'PineappleController@upload_image');
 
-Route::get('/pineapple/activity/create/{id}/get', 'PineappleController@get_activity_create');
+Route::post('/pineapple/login/handle', 'PineappleController@login_handle');
 
-Route::post('/pineapple/groups/create', 'PineappleController@finished_groups_create');
+Route::get('/pineapple/login/status', 'PineappleController@login_status');
 
 Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
 
     Route::get('/voting/{id}', 'VoteController@voting_handle');
     Route::get('/logout', 'SystemController@logout_handle');
 });
+
+Route::group(['prefix' => '/', 'middleware' => 'ManagerisLoginMiddleware'], function () {
+    
+        Route::post('/pineapple/groups/create', 'PineappleController@finished_groups_create');
+        Route::get('/pineapple/activity/create/{id}/get', 'PineappleController@get_activity_create');
+        Route::get('/pineapple/logout', 'PineappleController@logout_handle');
+    });
 
 // Route::get('/login', 'SystemController@login');
 

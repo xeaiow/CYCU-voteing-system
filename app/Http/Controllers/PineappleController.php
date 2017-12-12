@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Activity;
 use App\Groups;
 use App\Vote;
+use App\Manager;
 use Redirect;
 use Session;
 
@@ -71,5 +72,46 @@ class PineappleController extends Controller
         ];
 
         Groups::create($data);
+    }
+
+    // 判斷登入狀態
+    public function login_status ()
+    {
+        $getLoginInfo = Manager::Where('username', Session::get('m_username'))->Where('token', Session::get('m_token'));
+        
+        if ($getLoginInfo->count() == 1)
+        {
+            return $getLoginInfo->first();
+        }
+    }
+
+    // 登入作業
+    public function login_handle (Request $request)
+    {
+        $getUserInfo = Manager::Where('username', $request->username)->Where('password', $request->password);
+
+        if ($getUserInfo->count() == 1)
+        {
+            $token = md5(uniqid(rand()));
+
+            // 給予 token 跟 username 的 session
+            Session::put('m_token', $token);
+            Session::put('m_username', $request->username);
+
+            // 更新 token
+            $getUserInfo->update(['token' => $token]);
+
+            // 回傳個人資料
+            return $getUserInfo->first();
+        
+        }
+    }
+
+    // 登出
+    public function logout_handle ()
+    {
+        Session::forget('m_token');
+        Session::forget('m_username');
+        return redirect('/pineapple');
     }
 }
