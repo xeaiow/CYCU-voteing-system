@@ -56,7 +56,7 @@
                 var router = this.$router;
                 var self = this;
 
-                axios.post('//127.0.0.1:8000/login/handle', {
+                axios.post('//140.135.112.191/login/handle', {
                     username: this.username,
                     password: this.password,
                     level: this.level
@@ -94,12 +94,12 @@
                 });
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('//140.135.112.191/logout')
                 this.$router.go('/');
             }
         },
         mounted: function () {
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;})
+            axios.get('//140.135.112.191/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;})
         }
     }
 </script>

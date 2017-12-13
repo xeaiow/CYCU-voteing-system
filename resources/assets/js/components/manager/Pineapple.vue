@@ -175,7 +175,7 @@
 
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/activity/create',
+                    url: '//140.135.112.191/activity/create',
                     data: {
                         title: this.title,
                         description: this.description,
@@ -218,7 +218,7 @@
                     var self = this;
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '//140.135.112.191/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -237,7 +237,7 @@
                 this.image = '';
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('//140.135.112.191/pineapple/logout')
                 this.$router.go('/');
             }
         },
@@ -246,7 +246,7 @@
             var self = this;
             var router = this.$router;
 
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('//140.135.112.191/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

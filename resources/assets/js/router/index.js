@@ -78,14 +78,13 @@ export default new Router({
             path: '/pineapple',
             component: Pineapple,
             beforeEnter: (to, from, next) => {
-                axios.get('//127.0.0.1:8000/pineapple/login/status').then(res => {
+                axios.get('140.135.112.191/pineapple/login/status').then(res => {
 
                     if (res.data != "") {
                         next();
                         return false;
                     }
                     window.location.href = '/pineapple/login';
-
                 });
             }
         },

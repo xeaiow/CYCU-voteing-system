@@ -248,7 +248,7 @@ console.log('s');
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/image/upload',
+                    url: '//140.135.112.191/image/upload',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -294,7 +294,7 @@ console.log('s');
 
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '//140.135.112.191/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -317,7 +317,7 @@ console.log('s');
                 var router  = this.$router;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/pineapple/groups/create',
+                    url: '//140.135.112.191/pineapple/groups/create',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -352,12 +352,12 @@ console.log('s');
                 this.edit_open = true;
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('//140.135.112.191/pineapple/logout')
                 this.$router.go('/');
             },
             update_activity: function () {
 
-                axios.post('//127.0.0.1:8000/pineapple/activity/update/set', {
+                axios.post('//140.135.112.191/pineapple/activity/update/set', {
                     title: this.info.title,
                     description: this.info.description,
                     started: this.started.time,
@@ -374,9 +374,9 @@ console.log('s');
             var self = this;
             var router  = this.$router;
             
-            axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data})
+            axios.get('//140.135.112.191/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data})
 
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('//140.135.112.191/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;
