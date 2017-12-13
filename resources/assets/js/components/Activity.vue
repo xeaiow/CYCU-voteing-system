@@ -53,7 +53,7 @@
             }
         },
         mounted: function () {
-            axios.get('//127.0.0.1:8000/activity/get').then(response => {this.items = response.data;console.log(response);})
+            axios.get('//127.0.0.1:8000/activity/get').then(response => {this.items = response.data})
             axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;this.level = response.data.level;})
         }
     }

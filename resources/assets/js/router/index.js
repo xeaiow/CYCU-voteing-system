@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueImg from 'v-img'
-import SuiVue from 'semantic-ui-vue';
+import SuiVue from 'semantic-ui-vue'
+
 
 Vue.use(SuiVue);
 Vue.use(Router)
@@ -27,9 +28,10 @@ import ActivityIdGroup from '../components/ActivityIdGroup'
 import Login from '../components/Login'
 import finish from '../components/finish';
 import finishId from '../components/finishId';
-import Pineapple from '../components/Pineapple';
-import GroupsCreate from '../components/GroupsCreate';
-import PineappleLogin from '../components/PineappleLogin';
+import Pineapple from '../components/manager/Pineapple';
+import GroupsCreate from '../components/manager/GroupsCreate';
+import PineappleLogin from '../components/manager/PineappleLogin';
+import ManagerActivityLists from '../components/manager/ActivityLists';
 
 
 export default new Router({
@@ -91,6 +93,10 @@ export default new Router({
             path: '/pineapple/groups/create/:id',
             props: true,
             component: GroupsCreate
+        },
+        {
+            path: '/pineapple/activity',
+            component: ManagerActivityLists
         }
     ]
 })

@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="ui top fixed menu inverted">
-            <a class="item">中原資管投票管理後臺</a>
-            <a class="item">活動</a>
-            <a class="item">系統</a>
+            <a class="item" @click="$router.push('/pineapple')">中原資管投票管理後臺</a>
             <div class="right menu">
                 <a class="item font-style">{{ this.username }} 您好</a>
                 <a class="item font-style" v-if="token" @click="logout">登出</a>
@@ -14,9 +12,9 @@
         <div class="ui grid cycuvote-container">
             <div class="three wide column">
                 <!-- MENU -->
-                <div class="ui inverted vertical menu">
-                    <a class="active item"><i class="icon plus"></i>新增</a>
-                    <a class="item"><i class="icon tasks"></i>列表</a>
+                <div class="ui c vertical menu">
+                    <a class="active item" @click="$router.push('/pineapple')"><i class="icon plus"></i>新增</a>
+                    <a class="item" @click="$router.push('/pineapple/activity')"><i class="icon tasks"></i>列表</a>
                 </div>
                 
                 <!-- MENU_END -->
@@ -27,12 +25,17 @@
                     <h4 class="ui horizontal divider header">1. 活動海報</h4>
 
                     <div class="ui grid">
+                        <div class="sixteen wide column right aligned" v-if="image">
+                            <button class="ui icon button red tiny" @click="removeImage"><i class="minus icon"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="ui grid">
                         <div class="sixteen wide column" v-if="!image">
                             <input type="file" @change="onFileChange">
                         </div>
                         <div class="sixteen wide column center aligned" v-else>
-                            <img :src="image" class="ui image medium" />
-                            <button class="ui icon button red" @click="removeImage"><i class="minus icon"></i></button>
+                            <img :src="image" class="ui image medium centered" />
                         </div>
                     </div>
 
@@ -61,27 +64,21 @@
                         <h4 class="ui horizontal divider header margin-20">4. 活動時間</h4>
 
                         <div class="fields">
-                            <div class="eight wide field">
+                            <div class="five wide field">
                                 <label>開始</label>
-                                <div class="ui input left icon">
-                                    <i class="calendar icon"></i>
-                                    <input type="date" v-model="started" />
-                                </div>
+                                <date-picker :date="started" :option="option" :limit="limit"></date-picker>
                             </div>
-                            <div class="eight wide field">
+                            <div class="five wide field">
                                 <label>結束</label>
-                                <div class="ui input left icon">
-                                    <i class="calendar icon"></i>
-                                    <input type="date" v-model="deadline" />
-                                </div>
+                                <date-picker :date="deadline" :option="option" :limit="limit"></date-picker>
                             </div>
                         </div>
 
                     </sui-form>
 
                     <div class="ui grid">
-                        <div class="sixteen wide column">
-                            <button type="button" class="ui button basic fluid" v-if="image_url != ''" @click="create_activity">新增</button>
+                        <div class="sixteen wide column margin-20">
+                            <button type="button" class="ui button blue fluid" v-if="image_url != ''" @click="create_activity">新增</button>
                         </div>
                     </div>
                 </div>
@@ -91,6 +88,8 @@
 
 </template>
 <script>
+    import myDatepicker from 'vue-datepicker';
+
     export default {
         data: function () {
             return {
@@ -98,13 +97,49 @@
                 voter: [],
                 title: '',
                 description: '',
-                started: '',
-                deadline: '',
                 image: '',
                 image_url: '',
                 token: '',
-                username: ''
+                username: '',
+                started: {
+                    time: ''
+                },
+                deadline: {
+                    time: ''
+                },
+                option: {
+                    type: 'day',
+                    week: ['一', '二', '三', '四', '五', '六', '日'],
+                    month: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    format: 'YYYY-MM-DD',
+                    placeholder: '選擇日期',
+                    inputStyle: {
+                    'display': 'inline-block',
+                    'padding': '6px',
+                    'line-height': '22px',
+                    'font-size': '16px',
+                    'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+                    'border-radius': '2px',
+                    'color': '#5F5F5F'
+                    },
+                    color: {
+                        header: '#066FA5',
+                        headerText: '#E9EAED'
+                    },
+                    buttons: {
+                        ok: '好的',
+                        cancel: '取消'
+                    },
+                    overlayOpacity: 0.3,
+                },
+                limit: [{
+                    type: 'weekday',
+                    available: [1, 2, 3, 4, 5, 6, 7]
+                }]
             }
+        },
+        components: {
+            'date-picker': myDatepicker
         },
         methods: {
             create_activity: function () {
@@ -146,8 +181,8 @@
                         description: this.description,
                         voter: this.voter,
                         img: this.image_url,
-                        started: this.started,
-                        deadline: this.deadline
+                        started: this.started.time,
+                        deadline: this.deadline.time
                     }
                 })
                 .then(function (response) {

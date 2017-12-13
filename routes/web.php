@@ -43,9 +43,11 @@ Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function ()
 Route::group(['prefix' => '/', 'middleware' => 'ManagerisLoginMiddleware'], function () {
     
         Route::post('/pineapple/groups/create', 'PineappleController@finished_groups_create');
+        Route::post('/pineapple/activity/update/set', 'PineappleController@set_activity');
         Route::get('/pineapple/activity/create/{id}/get', 'PineappleController@get_activity_create');
+        Route::get('/pineapple/activity/{id}/get', 'PineappleController@get_activity');
         Route::get('/pineapple/logout', 'PineappleController@logout_handle');
-    });
+});
 
 // Route::get('/login', 'SystemController@login');
 

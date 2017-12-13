@@ -114,7 +114,7 @@ class VoteController extends Controller
 
         $groups         = Groups::Where('_id', $group_id)->first();
 
-        $isExists       = Vote::Where('student_id', Session::get('username'))->Where('student_id', $student_id);
+        $isExists       = Vote::Where('student_id', Session::get('username'))->Where('activity_id', $groups['activity']);
 
         if ($isExists->count() == 0)
         {

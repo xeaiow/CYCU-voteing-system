@@ -114,4 +114,41 @@ class PineappleController extends Controller
         Session::forget('m_username');
         return redirect('/pineapple');
     }
+
+    // 取得活動
+    public function get_activity (Request $request)
+    {
+        $today = date('Y-m-d');
+
+        switch ($request->id) {
+            case '1':
+                $result = Activity::Where('started', '<=', $today)->Where('deadline', '>=', $today)->get();
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        echo $result;
+    }
+
+    // 更新活動資訊
+    public function set_activity (Request $request)
+    {
+        $ActivityInfo = Activity::Where('_id', $request->id)->update(
+            [
+                'title' => $request->title, 
+                'description' => $request->description,
+                'started' => $request->started,
+                'deadline' => $request->deadline
+            ]
+        );
+
+        // $ActivityInfo->title = $request->title;
+        // $ActivityInfo->description = $request->description;
+        // $ActivityInfo->started = $request->started;
+        // $ActivityInfo->deadline = $request->deadline;
+
+        // $ActivityInfo->save();
+    }
 }
