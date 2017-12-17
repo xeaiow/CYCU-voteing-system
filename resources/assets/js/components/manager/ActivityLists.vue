@@ -49,7 +49,7 @@
         },
         methods: {
             logout: function () {
-                axios.get('//140.135.112.191/pineapple/logout')
+                axios.get('//127.0.0.1:8000/pineapple/logout')
                 this.$router.go('/');
             }
         },
@@ -58,9 +58,9 @@
             var self = this;
             var router = this.$router;
 
-            axios.get('//140.135.112.191/pineapple/activity/1/get').then(response => {this.items = response.data})
+            axios.get('//127.0.0.1:8000/pineapple/activity/1/get').then(response => {this.items = response.data})
             
-            axios.get('//140.135.112.191/pineapple/login/status')
+            axios.get('//127.0.0.1:8000/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

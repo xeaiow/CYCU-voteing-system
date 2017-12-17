@@ -21,6 +21,7 @@ class PineappleController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'voter' => $request->voter,
+            'voter_class' => $request->voter_class,
             'img' => $request->img,
             'started' => $request->started,
             'deadline' => $request->deadline
@@ -132,6 +133,7 @@ class PineappleController extends Controller
         echo $result;
     }
 
+
     // 更新活動資訊
     public function set_activity (Request $request)
     {
@@ -143,12 +145,28 @@ class PineappleController extends Controller
                 'deadline' => $request->deadline
             ]
         );
+    }
 
-        // $ActivityInfo->title = $request->title;
-        // $ActivityInfo->description = $request->description;
-        // $ActivityInfo->started = $request->started;
-        // $ActivityInfo->deadline = $request->deadline;
+    // 取得活動底下的組別資訊
+    public function get_activity_groups (Request $request)
+    {
+       echo Groups::Where('activity', $request->id)->get();
+    }
 
-        // $ActivityInfo->save();
+    // 取得組別個別資訊
+    public function get_groups (Request $request)
+    {
+        echo Groups::Where('_id', $request->id)->first();
+    }
+
+    // 更新組別資料
+    public function set_groups (Request $request)
+    {
+        Groups::Where('_id', $request->id)->update(
+            [
+                'groups' => $request->groups, 
+                'description' => $request->description,
+            ]
+        );
     }
 }

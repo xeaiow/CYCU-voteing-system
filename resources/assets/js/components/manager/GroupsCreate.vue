@@ -41,6 +41,13 @@
                             <div class="item" v-for="(item, index) in info.voter" :key="index">{{ item }}</div>
                         </div>
                     </p>
+
+                    <h4 class="ui horizontal divider header margin-20">所有組別</h4>
+                    <p>
+                        <div class="ui list">
+                            <div class="item" @click="$router.push('/pineapple/groups/' + item._id)" v-for="(item, index) in groups_info" :key="index">{{ item.groups }}</div>
+                        </div>
+                    </p>
                     
                 </div>
 
@@ -131,9 +138,9 @@
                         <div class="ui grid">
                             <div class="sixteen wide column">
                                 <input type="file" @change="onFileChange" id="select-img" multiple/>
-                                <button class="ui icon button basic tiny" @click="uploadImage">上傳</button>
+                                <button class="ui icon button fluid primary tiny" @click="uploadImage">上傳</button>
                             </div>
-                            <div class="sixteen wide column center aligned" v-if="image">
+                            <div class="sixteen wide column center aligned" v-if="image!=''">
                                 <img :src="image" class="ui image medium centered" />
                             </div>
                         </div>
@@ -149,6 +156,7 @@
             </div>
             <!-- RIGHT_END -->
         </div>
+
     </div>
 </template>
 
@@ -160,9 +168,11 @@
         data: function () {
             return {
                 info: [],
+                groups_info: [],
                 groups: '',
                 description: '',
                 image_tmp: [],
+                permission: [],
                 image: [],
                 image_url: '',
                 cover: '',
@@ -218,7 +228,7 @@
                     return;
 
                     for (var i =0; i<= files.length; i++) {
-console.log('s');
+
                         this.createImage(files[i]);
                     }
                 
@@ -248,7 +258,7 @@ console.log('s');
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/image/upload',
+                    url: '//127.0.0.1:8000/image/upload',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -294,7 +304,7 @@ console.log('s');
 
                     axios({
                         method: 'post',
-                        url: '//140.135.112.191/image/upload',
+                        url: '//127.0.0.1:8000/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -317,7 +327,7 @@ console.log('s');
                 var router  = this.$router;
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/pineapple/groups/create',
+                    url: '//127.0.0.1:8000/pineapple/groups/create',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -352,12 +362,12 @@ console.log('s');
                 this.edit_open = true;
             },
             logout: function () {
-                axios.get('//140.135.112.191/pineapple/logout')
+                axios.get('//127.0.0.1:8000/pineapple/logout')
                 this.$router.go('/');
             },
             update_activity: function () {
 
-                axios.post('//140.135.112.191/pineapple/activity/update/set', {
+                axios.post('//127.0.0.1:8000/pineapple/activity/update/set', {
                     title: this.info.title,
                     description: this.info.description,
                     started: this.started.time,
@@ -365,7 +375,7 @@ console.log('s');
                     id: this.$route.params.id
                 })
                 .then(function (res) {          
-                    console.log(res);
+
                 });
             }
         },
@@ -374,9 +384,11 @@ console.log('s');
             var self = this;
             var router  = this.$router;
             
-            axios.get('//140.135.112.191/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data})
+            axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data});
+            
+            axios.get('//127.0.0.1:8000/pineapple/activity/groups/' + this.$route.params.id + '/get').then(response => {this.groups_info = response.data})
 
-            axios.get('//140.135.112.191/pineapple/login/status')
+            axios.get('//127.0.0.1:8000/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

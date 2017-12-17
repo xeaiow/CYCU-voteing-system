@@ -32,6 +32,7 @@ import Pineapple from '../components/manager/Pineapple';
 import GroupsCreate from '../components/manager/GroupsCreate';
 import PineappleLogin from '../components/manager/PineappleLogin';
 import ManagerActivityLists from '../components/manager/ActivityLists';
+import PineappleGroups from '../components/manager/PineappleGroups';
 
 
 export default new Router({
@@ -78,7 +79,7 @@ export default new Router({
             path: '/pineapple',
             component: Pineapple,
             beforeEnter: (to, from, next) => {
-                axios.get('140.135.112.191/pineapple/login/status').then(res => {
+                axios.get('//127.0.0.1:8000/pineapple/login/status').then(res => {
 
                     if (res.data != "") {
                         next();
@@ -96,6 +97,10 @@ export default new Router({
         {
             path: '/pineapple/activity',
             component: ManagerActivityLists
+        },
+        {
+            path: '/pineapple/groups/:id',
+            component: PineappleGroups
         }
     ]
 })

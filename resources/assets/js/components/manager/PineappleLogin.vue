@@ -46,7 +46,7 @@
                 var router = this.$router;
                 var self = this;
 
-                axios.post('//140.135.112.191/pineapple/login/handle', {
+                axios.post('//127.0.0.1:8000/pineapple/login/handle', {
                     username: this.username,
                     password: this.password,
                 })

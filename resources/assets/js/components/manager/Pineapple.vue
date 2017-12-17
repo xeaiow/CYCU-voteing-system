@@ -94,6 +94,7 @@
         data: function () {
             return {
                 permission: [],
+                voter_class: [],
                 voter: [],
                 title: '',
                 description: '',
@@ -156,18 +157,22 @@
                             case 0:
                                 this.voter.push(dept[0]);
                                 this.voter.push(dept[1]);
+                                this.voter_class.push(1);
                                 break;
                             case 1:
                                 this.voter.push(dept[2]);
                                 this.voter.push(dept[3]);
+                                this.voter_class.push(2);
                                 break;
                             case 2:
                                 this.voter.push(dept[4]);
                                 this.voter.push(dept[5]);
+                                this.voter_class.push(3);
                                 break;
                             case 3:
                                 this.voter.push(dept[6]);
                                 this.voter.push(dept[7]);
+                                this.voter_class.push(4);
                                 break;
                         }
                     }
@@ -175,11 +180,12 @@
 
                 axios({
                     method: 'post',
-                    url: '//140.135.112.191/activity/create',
+                    url: '//127.0.0.1:8000/activity/create',
                     data: {
                         title: this.title,
                         description: this.description,
                         voter: this.voter,
+                        voter_class: this.voter_class,
                         img: this.image_url,
                         started: this.started.time,
                         deadline: this.deadline.time
@@ -218,7 +224,7 @@
                     var self = this;
                     axios({
                         method: 'post',
-                        url: '//140.135.112.191/image/upload',
+                        url: '//127.0.0.1:8000/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -237,7 +243,7 @@
                 this.image = '';
             },
             logout: function () {
-                axios.get('//140.135.112.191/pineapple/logout')
+                axios.get('//127.0.0.1:8000/pineapple/logout')
                 this.$router.go('/');
             }
         },
@@ -246,7 +252,7 @@
             var self = this;
             var router = this.$router;
 
-            axios.get('//140.135.112.191/pineapple/login/status')
+            axios.get('//127.0.0.1:8000/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

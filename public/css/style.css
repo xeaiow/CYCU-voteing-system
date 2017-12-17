@@ -39,6 +39,10 @@ body {
     margin-top: 40px !important;
 }
 
+.ui .list .item {
+    cursor: pointer;
+}
+
 [v-cloak] {
     display: none;
 }
