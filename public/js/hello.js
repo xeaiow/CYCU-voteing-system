@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 557);
+/******/ 	return __webpack_require__(__webpack_require__.s = 566);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -88,10 +88,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(23);
+    adapter = __webpack_require__(24);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(23);
+    adapter = __webpack_require__(24);
   }
   return adapter;
 }
@@ -162,11 +162,94 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
 
 /***/ }),
 
-/***/ 21:
+/***/ 17:
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+
+/***/ 22:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -185,7 +268,7 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 
-/***/ 22:
+/***/ 23:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -376,7 +459,7 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ 23:
+/***/ 24:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -387,7 +470,7 @@ var settle = __webpack_require__(54);
 var buildURL = __webpack_require__(56);
 var parseHeaders = __webpack_require__(57);
 var isURLSameOrigin = __webpack_require__(58);
-var createError = __webpack_require__(24);
+var createError = __webpack_require__(25);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(59);
 
 module.exports = function xhrAdapter(config) {
@@ -564,7 +647,7 @@ module.exports = function xhrAdapter(config) {
 
 /***/ }),
 
-/***/ 24:
+/***/ 25:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -590,7 +673,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 /***/ }),
 
-/***/ 25:
+/***/ 26:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -603,7 +686,7 @@ module.exports = function isCancel(value) {
 
 /***/ }),
 
-/***/ 26:
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -626,89 +709,6 @@ Cancel.prototype.toString = function toString() {
 Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
-
-
-/***/ }),
-
-/***/ 27:
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
 
 
 /***/ }),
@@ -970,7 +970,7 @@ module.exports = function(module) {
 "use strict";
 
 
-var bind = __webpack_require__(21);
+var bind = __webpack_require__(22);
 var isBuffer = __webpack_require__(51);
 
 /*global toString:true*/
@@ -1287,9 +1287,9 @@ window._ = __webpack_require__(46);
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(47);
+  window.$ = window.jQuery = __webpack_require__(47);
 
-    __webpack_require__(48);
+  __webpack_require__(48);
 } catch (e) {}
 
 /**
@@ -1301,7 +1301,7 @@ try {
 window.axios = __webpack_require__(49);
 
 window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest'
+  'X-Requested-With': 'XMLHttpRequest'
 };
 
 /**
@@ -1313,9 +1313,9 @@ window.axios.defaults.headers.common = {
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -31198,7 +31198,7 @@ module.exports = function normalizeComponent (
 
 
 var utils = __webpack_require__(4);
-var bind = __webpack_require__(21);
+var bind = __webpack_require__(22);
 var Axios = __webpack_require__(52);
 var defaults = __webpack_require__(13);
 
@@ -31233,9 +31233,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(26);
+axios.Cancel = __webpack_require__(27);
 axios.CancelToken = __webpack_require__(66);
-axios.isCancel = __webpack_require__(25);
+axios.isCancel = __webpack_require__(26);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -31399,7 +31399,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(24);
+var createError = __webpack_require__(25);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -31452,87 +31452,6 @@ module.exports = function enhanceError(error, config, code, request, response) {
   error.response = response;
   return error;
 };
-
-
-/***/ }),
-
-/***/ 557:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(558);
-
-
-/***/ }),
-
-/***/ 558:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Hello__ = __webpack_require__(559);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Hello___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Hello__);
-__webpack_require__(45);
-// 匯入 Hello.vue 檔，不需加副檔名
-
-new Vue({
-    // 找到 hello.blade.php 中指定的掛載點元素
-    el: '#app',
-
-    // 使用我們建立的 Hello(.vue) 元件
-    components: { Hello: __WEBPACK_IMPORTED_MODULE_0__components_Hello___default.a }
-});
-
-/***/ }),
-
-/***/ 559:
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(560)
-}
-var normalizeComponent = __webpack_require__(5)
-/* script */
-var __vue_script__ = __webpack_require__(562)
-/* template */
-var __vue_template__ = __webpack_require__(563)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\Hello.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a0937a2a", Component.options)
-  } else {
-    hotAPI.reload("data-v-a0937a2a", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
 
 
 /***/ }),
@@ -31613,97 +31532,110 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 /***/ }),
 
-/***/ 560:
+/***/ 566:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(567);
+
+
+/***/ }),
+
+/***/ 567:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Hello__ = __webpack_require__(568);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Hello___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Hello__);
+__webpack_require__(45);
+// 匯入 Hello.vue 檔，不需加副檔名
+
+new Vue({
+    // 找到 hello.blade.php 中指定的掛載點元素
+    el: '#app',
+
+    // 使用我們建立的 Hello(.vue) 元件
+    components: { Hello: __WEBPACK_IMPORTED_MODULE_0__components_Hello___default.a }
+});
+
+/***/ }),
+
+/***/ 568:
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(569)
+}
+var normalizeComponent = __webpack_require__(5)
+/* script */
+var __vue_script__ = __webpack_require__(571)
+/* template */
+var __vue_template__ = __webpack_require__(572)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Hello.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e28e2faa", Component.options)
+  } else {
+    hotAPI.reload("data-v-e28e2faa", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ 569:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(561);
+var content = __webpack_require__(570);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(28)("953ce808", content, false);
+var update = __webpack_require__(28)("53422528", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a0937a2a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./Hello.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a0937a2a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./Hello.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-e28e2faa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./Hello.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-e28e2faa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./Hello.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
  }
  // When the module is disposed, remove the <style> tags
  module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 561:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(27)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n.hello {\n    font-size: 2em;\n    color: green;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ 562:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['name'],
-    data: function data() {
-        return {
-            msg: 'This is a Laravel with Vue Demo.'
-        };
-    }
-});
-
-/***/ }),
-
-/***/ 563:
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", [_vm._v("Hello")]),
-    _vm._v(" "),
-    _c("p", { staticClass: "hello" }, [
-      _vm._v("Hi " + _vm._s(_vm.name || "匿名"))
-    ]),
-    _vm._v(" "),
-    _c("p", [_vm._v(_vm._s(_vm.msg))])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a0937a2a", module.exports)
-  }
 }
 
 /***/ }),
@@ -31750,6 +31682,74 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
+
+/***/ }),
+
+/***/ 570:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(17)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.hello {\n    font-size: 2em;\n    color: green;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 571:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['name'],
+    data: function data() {
+        return {
+            msg: 'This is a Laravel with Vue Demo.'
+        };
+    }
+});
+
+/***/ }),
+
+/***/ 572:
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", [_vm._v("Hello")]),
+    _vm._v(" "),
+    _c("p", { staticClass: "hello" }, [
+      _vm._v("Hi " + _vm._s(_vm.name || "匿名"))
+    ]),
+    _vm._v(" "),
+    _c("p", [_vm._v(_vm._s(_vm.msg))])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e28e2faa", module.exports)
+  }
+}
 
 /***/ }),
 
@@ -32002,7 +32002,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(4);
 var transformData = __webpack_require__(63);
-var isCancel = __webpack_require__(25);
+var isCancel = __webpack_require__(26);
 var defaults = __webpack_require__(13);
 
 /**
@@ -32159,7 +32159,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(26);
+var Cancel = __webpack_require__(27);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -32503,7 +32503,7 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8), __webpack_require__(23)))
 
 /***/ }),
 

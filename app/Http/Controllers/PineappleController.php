@@ -72,7 +72,7 @@ class PineappleController extends Controller
             'count' => 0
         ];
 
-        Groups::create($data);
+        return Groups::create($data);
     }
 
     // 判斷登入狀態
@@ -164,7 +164,9 @@ class PineappleController extends Controller
     {
         Groups::Where('_id', $request->id)->update(
             [
-                'groups' => $request->groups, 
+                'groups' => $request->groups,
+                'img' => $request->img,
+                'photo' => $request->photo,
                 'description' => $request->description,
             ]
         );

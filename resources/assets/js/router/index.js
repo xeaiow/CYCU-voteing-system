@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueImg from 'v-img'
 import SuiVue from 'semantic-ui-vue'
+import Notifications from 'vue-notification'
 
-
+Vue.use(Notifications)
 Vue.use(SuiVue);
 Vue.use(Router)
 

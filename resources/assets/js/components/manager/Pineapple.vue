@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="ui top fixed menu inverted">
+        <div class="ui top fixed menu inverted navbar">
             <a class="item" @click="$router.push('/pineapple')">中原資管投票管理後臺</a>
             <div class="right menu">
                 <a class="item font-style">{{ this.username }} 您好</a>

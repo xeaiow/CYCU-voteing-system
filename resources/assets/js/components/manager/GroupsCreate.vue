@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="ui top fixed menu inverted">
+        <div class="ui top fixed menu inverted navbar">
             <a class="item" @click="$router.push('/pineapple')">中原資管投票管理後臺</a>
             <div class="right menu">
                 <a class="item font-style">{{ this.username }} 您好</a>
@@ -105,14 +105,14 @@
             <div class="eight wide column">
                 <h2 class="ui header">
                     <i class="plus icon"></i>
-                    <div class="content">新增活動組別</div>
+                    <div class="content">新增組別</div>
                 </h2>
                 <div class="ui segment">
                     <sui-form>
                         <input name="_token" hidden value="{!! csrf_token() !!}" />
                         <h4 class="ui horizontal divider header margin-20">組別資料</h4>
                         <sui-form-field>
-                            <label>組別名稱</label>
+                            <label>名稱</label>
                             <input type="text" v-model="groups" />
                         </sui-form-field>
 
@@ -127,9 +127,11 @@
                             <div class="sixteen wide column" v-if="cover==''">
                                 <input type="file" @change="onCoverChange" />
                             </div>
-                            <div class="sixteen wide column center aligned" v-else>
-                                <img :src="cover" class="ui image medium centered" />
-                                <button class="ui icon button red" @click="onCoverChange"><i class="minus icon tiny"></i></button>
+                            <div class="sixteen wide column right aligned" v-else>
+                                <img v-img:name :src="cover" class="ui image small centered team-images" />
+                                <button class="circular ui icon button red" @click="removeImage">
+                                    <i class="trash alternate icon tiny"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -138,16 +140,32 @@
                         <div class="ui grid">
                             <div class="sixteen wide column">
                                 <input type="file" @change="onFileChange" id="select-img" multiple/>
-                                <button class="ui icon button fluid primary tiny" @click="uploadImage">上傳</button>
                             </div>
-                            <div class="sixteen wide column center aligned" v-if="image!=''">
-                                <img :src="image" class="ui image medium centered" />
+                            
+                            <div class="ui small bordered images" v-if="image_tmp!=''">
+                                <div v-for="(item, index) in image_tmp" :key="index">
+                                    <div class="sixteen wide column right aligned">
+                                        <img v-img:name :src="item" class="ui image team-images" />
+                                        <button class="circular ui icon button red" @click="removePhoto(index)">
+                                            <i class="trash alternate icon tiny"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="ui small bordered images" v-if="uploaded_img!=''">
+                                <div v-for="(item, index) in uploaded_img" :key="index">
+                                    <div class="sixteen wide column right aligned">
+                                        <img v-img:name :src="item" class="ui image team-images" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="ui icon button fluid black" @click="uploadImage" v-if="image_tmp!=''">上傳</button>
                         </div>
 
                     </sui-form>
 
-                    <div class="ui grid">
+                    <div class="ui grid" v-if="image!=''">
                         <div class="sixteen wide column">
                             <button type="button" @click="finished" class="ui button basic fluid">完成</button>
                         </div>
@@ -175,6 +193,7 @@
                 permission: [],
                 image: [],
                 image_url: '',
+                uploaded_img: [],
                 cover: '',
                 edit_open: false,
                 username: '',
@@ -224,36 +243,37 @@
             {
                 
                 var files = e.target.files || e.dataTransfer.files;
-                if (!files.length)
-                    return;
-
-                    for (var i =0; i<= files.length; i++) {
-
-                        this.createImage(files[i]);
-                    }
-                
-            },
-            createImage(file) {
+                var self = this;
 
                 var image = new Image();
                 var reader = new FileReader();
 
-                reader.onload = (e) => {
+                if (!files.length) {
+                    return;
+                }
+                for (var i = 0; i < files.length; i++) {
+                    self.createImage(files[i]);
+                }
 
+                this.image = [];
+            },
+            createImage(file) {
+                
+                var image = new Image();
+                var reader = new FileReader();
+
+                reader.onload = (e) => {
                     this.image_tmp.push(e.target.result);
                 };
-               
                 reader.readAsDataURL(file);
-
-                //document.getElementById("select-img").value = "";
-                this.$swal({
-                    title: "選取成功！",
-                    text: "如需增加圖片請繼續選取，完成後請點擊上傳。",
-                    confirmButtonText: "知道了",
-                });
-               
             },
             uploadImage: function () {
+
+                this.$notify({
+                    group: 'foo',
+                    title: '上傳中',
+                    text: '請耐心等待上傳'
+                });
 
                 var self = this;
                 axios({
@@ -279,11 +299,16 @@
                         text: "輸入相關資料後，點擊送出完成新增。",
                         confirmButtonText: "知道了",
                     });
+                    self.uploaded_img = self.image_tmp;
+                    self.image_tmp = '';
                 });
             },
             removeImage: function (e) {
                 
-                this.image = '';
+                this.cover = '';
+            },
+            removePhoto: function(i) {
+                this.image_tmp.splice(i, 1); 
             },
             onCoverChange: function (e) {
 
@@ -340,12 +365,8 @@
                     }
                 })
                 .then(function (res) {
-
-                    self.$swal({
-                        title: "新增完成！",
-                        text: "如有其他資料，請接續新增即可。",
-                        confirmButtonText: "知道了",
-                    });
+                    console.log(res);
+                    self.$router.push('/pineapple/groups/' + res.data._id);
                     self.activity = '';
                     self.groups = '';
                     self.description = '';
