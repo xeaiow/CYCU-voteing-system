@@ -1,36 +1,68 @@
 <template>
 
     <div>
-        <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
-            <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
-            <a class="item font-style" @click="$router.push('/')">活動列表</a>
-            <a class="item font-style" @click="$router.push('/finished')">公佈欄</a>
-            <div class="right menu">
-                <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
-                <a class="item font-style" v-if="token" @click="logout">登出</a>
-                <a class="item font-style" v-if="!token" @click="$router.push('/login')">登入</a>
+        <!-- 標題板岩 -->
+        <div class="ts padded heading slate">
+            <div class="ts container">
+                <span class="header">中原資管專題投票系統</span>
+                <span class="description">擇你所愛，選你所擇</span>
             </div>
         </div>
+        <!-- / 標題板岩 -->
 
-        <div class="ui grid cycuvote-container">
-            <div class="sixteen wide column">
-                <div class="ui stackable three column grid">
+        <!-- 主要容器 -->
+        <div class="ts padded container">
 
-                    <div class="column" v-for="(item, index) in items" :key="index">
-                        <div class="ui cards stackable">
-                            <div class="card pointer" @click="$router.push({path: 'finished/' + item._id})">
-                                <div class="content">
-                                    {{ item.title }}
-                                </div>
-                                <div class="image">
-                                    <img v-bind:src="item.img" />
-                                </div>
-                            </div>
+            <div class="ts hidden divider"></div>
+                
+            <div class="ts secondary menu">
+                <a class="item" @click="$router.push('/')">活動列表</a>
+                <div class="header item" @click="$router.push('/finished')">公佈欄</div>
+
+                <!-- 右側選單 -->
+                <div class="right menu">
+                    <div class="fitted item">
+                        <div class="ts icon input">
+                            <input type="text" placeholder="搜尋⋯⋯">
+                            <i class="search link icon"></i>
                         </div>
                     </div>
+                    <a href="#!" class="item">登出</a>
+                </div>
+                <!-- / 右側選單 -->
+            </div>
 
+            <!-- 活動卡片群組 -->
+            <div class="ts three cards">
+                <div class="ts card" v-for="(item, index) in items" :key="index" @click="$router.push({path: 'finished/' + item._id})">
+                    <div class="image">
+                        <img v-bind:src="item.img">
+                    </div>
+                    <div class="content">
+                        <div class="header center aligned">
+                            {{ item.title }}
+                        </div>
+                        
+                    </div>
+                    <div class="secondary extra content">
+                        <!-- 資訊 -->
+                        <div class="ts three column grid">
+                            <div class="column">
+                                <strong>20</strong>
+                                <br>
+                                參賽組
+                            </div>
+                            <div class="column">
+                                <strong>2018/10/6~2018/10/10</strong>
+                                <br>
+                                競賽時間
+                            </div>
+                        </div>
+                        <!-- / 資訊 -->
+                    </div>
                 </div>
             </div>
+            <!-- / 活動卡片群組 -->
         </div>
     </div>
 

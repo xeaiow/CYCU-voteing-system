@@ -1,61 +1,68 @@
 <template>
     <div>
-        <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
-            <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
-            <a class="item font-style" @click="$router.push('/')">活動列表</a>
-            <div class="right menu">
-                <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
-                <a class="item font-style" v-if="token" @click="logout">登出</a>
-                <a class="item font-style" v-if="!token" @click="$router.push('/login')">登入</a>
+         <!-- 標題板岩 -->
+        <div class="ts padded heading slate">
+            <div class="ts container">
+                <span class="header">競賽結果</span>
+                <span class="description">早安，我的朋友！無論成敗與否，我們都要勇敢面對</span>
             </div>
         </div>
-
-        <div class="ui grid cycuvote-container">
-
-            <div class="eight wide column centered center aligned">
-                <div class="ui negative message" v-if="message">
-                    <div class="header">
-                        The page you were looking for doesn't exist.
+        <!-- / 標題板岩 -->
+        <!-- 窄容器網格系統 -->
+        <div class="ts very padded relaxed stackable container grid">
+            <!-- 欄位 -->
+            <div class="sixteen wide column margin-navbar">
+                <!-- 標題 -->
+                <h1 class="ts center aligned header">
+                    {{ info.title }}
+                    <div class="sub header">
+                        {{ info.description }}
                     </div>
-                    <p>
-                        You may have mistyped the address or the page may have moved.
-                    </p>
-                </div>
-            </div>
+                </h1>
+                <!-- / 標題 -->
 
-            <div class="sixteen wide column centered center aligned" v-if="!message">
-                <div class="sixteen wide column">
-                    <h2 class="ui icon header center aligned">
-                        <i class="lab icon"></i>
-                        <div class="content font-style">
-                            {{ info.title }}
-                        </div>
-                        <div class="sub header">{{ info.description }}</div>
-                    </h2>
-                </div>
+                <!-- 留白 -->
+                <div class="ts hidden divider"></div>
+                <!-- / 留白 -->
             </div>
+            <!-- / 欄位 -->
 
+            <!-- 便利貼欄位 -->
             <div class="sixteen wide column">
-
-                <div class="ui stackable three column grid" v-if="!message">
-                    <div class="column" v-for="(item, index) in items">
-                        <div class="ui cards stackable">
-                            <div class="card pointer" @click="$router.push({path:'/group/' + item._id})">
-                                <div class="content">
-                                    <div class="ui top right attached label basic">{{ item.count }} 票</div>
-                                    {{ item.groups }}
-                                </div>
-                                <div class="image">
-                                    <img v-bind:src="item.img" />
+                <!-- 瀑布流卡片群組 -->
+                <div class="ts stackable three cards">
+                    <!-- 單張卡片 -->
+                    <div class="ts card" v-for="(item, index) in items" :key="index">
+                        <div class="content">
+                            <div class="header">
+                                <div class="ts grid">
+                                    <div class="four wide column">
+                                        <div class="ts positive statistic">
+                                            <div class="value">{{ item.count }}</div>
+                                            <div class="label">得票數</div>
+                                        </div>
+                                    </div>
+                                    <div class="twelve wide column">
+                                        <div class="header center aligned">
+                                            <div class="ts borderless segment">
+                                                {{ item.groups }}
+                                            </div> 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="image" @click="$router.push({path:'/group/' + item._id})">
+                            <img v-bind:src="item.img">
+                        </div>
                     </div>
+                    <!-- / 單張卡片 -->
                 </div>
+                <!-- / 瀑布流卡片群組 -->
             </div>
-
-
+            <!-- / 便利貼欄位 -->
         </div>
+        <!-- / 窄容器網格系統 -->
     </div>
 </template>
 

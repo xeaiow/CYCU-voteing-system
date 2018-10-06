@@ -1,68 +1,152 @@
 <template>
     <div>
-        <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
-            <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
-            <a class="item font-style" @click="$router.push('/')">活動列表</a>
-            <a class="item font-style" @click="$router.push('/finished')">公佈欄</a>
-            <div class="right menu">
-                <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
-                <a class="item font-style" v-if="token" @click="logout">登出</a>
-                <a class="item font-style" v-if="!token" @click="$router.push('/login')">登入</a>
-            </div>
-        </div>
-
-        <div class="ui grid stackable cycuvote-container">
-
-            <div class="four wide column">
-                <div class="ui card fluid">
-                    <div class="image">
-                        <img v-bind:src="items.img">
-                    </div>
-                    <div class="content center aligned">
-                        <a class="header font-style">{{ items.groups }}</a>
+        <!-- 主要容器 -->
+    <div class="ts very padded text container">
+        <!-- 主要信件卡片 -->
+        <div class="ts card">
+            <!-- 頂部內容與標題 -->
+            <div class="center aligned padded content">
+                <div class="ts large header">
+                    {{ items.groups }}
+                    <div class="sub header">
+                        {{ items.description }}
                     </div>
                 </div>
-                <div class="ui vertical fluid menu">
-                    <div class="ui segment basic">
-                        <div class="ui list">
-                            <div class="item">
-                                <i class="calendar icon"></i>
-                                <div class="content font-style">
-                                    {{ activitys.started }} ~ {{ activitys.deadline }}
-                                </div>
+            </div>
+            <!-- / 頂部內容與標題 -->
+
+            <!-- 特色圖片 -->
+            <div class="image">
+                <img v-bind:src="items.img">
+            </div>
+            <!-- / 特色圖片 -->
+
+            <!-- 主要推銷內容 -->
+            <div class="center aligned padded content">
+
+                <!-- CTA：矚目動作按鈕 -->
+                <button class="ts positive button" @click="inputItouch()">投給這組 😃</button>
+                <!-- / CTA：矚目動作按鈕 -->
+                <div class="fb-share-button" data-href="http://cr.im.cycu.edu.tw:90/" data-layout="button" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">快點分享</a></div>
+
+                <!-- 區段分隔線 -->
+                <div class="ts section divider"></div>
+                <!-- / 區段分隔線 -->
+
+                <h3>可投票系級</h3>
+                <p>
+                    <a href="#!" class="ts horizontal link label" v-for="(voter, index) in activitys.voter" :key="index">{{ voter }}</a>
+                </p>
+
+                <!-- 特色項目群組 -->
+                <div class="ts relaxed items">
+                    <h3>精彩圖集</h3>
+                    <!-- 單個項目 -->
+                    <div class="item">
+                        <div class="image" v-for="(item, index) in items.photo" :key="index">
+                            <img v-img:name v-bind:src="item" />
+                        </div>
+
+                    </div>
+                    <!-- / 單個項目 -->
+                </div>
+                <!-- / 特色項目群組 -->
+            </div>
+            <!-- / 主要推銷內容 -->
+        </div>
+        <!-- / 主要信件卡片 -->
+        <!-- 左側欄位 -->
+        <div class="twelve wide column">
+            <br>
+            <!-- 頂部聊天室資訊欄位 -->
+            <div class="ts top attached segment">
+                <div class="ts list">
+                    <div class="item">
+                        <div class="ts mini rounded image">
+                            <img src="https://examples.tocas-ui.com/images/user.png">
+                        </div>
+                        <div class="content">
+                            <div class="header">評論</div>
+                            <div class="meta">
+                                <span>@ {{ items.groups }}</span>
                             </div>
-                            <div class="item">
-                                <i class="user icon"></i>
-                                <div class="content font-style">
-                                    <div class="ui list">
-                                        <div class="item" v-for="(voter, index) in activitys.voter" :key="index">{{ voter }}</div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="actions">
+                            <div class="ts secondary icon button">
+                                <i class="vertical ellipsis icon"></i>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- / 頂部聊天室資訊欄位 -->
 
-                <div v-if="isLogin">
-                    <div class="ui bottom black attached button font-style" @click="inputItouch" v-if="voting == 0">投給這組</div>
-                    <div class="ui bottom disabled attached button font-style" v-else>finished</div>
+            <!-- 中部主要聊天訊息 -->
+            <div class="ts attached secondary segment">
+                <!-- 對話氣泡 -->
+                <div class="ts speeches">
+                    <!-- 左側群組 -->
+                    <div class="circular group">
+                        <div class="speech">
+                            <div class="avatar">
+                                <img src="https://examples.tocas-ui.com/images/user.png">
+                            </div>
+                            <div class="content">喔！你醒了啊？</div>
+                        </div>
+                        <div class="speech">
+                            <div class="avatar">
+                                <img src="https://examples.tocas-ui.com/images/user.png">
+                            </div>
+                            <div class="content">我已經連續兩天沒休息了。</div>
+                        </div>
+                        <div class="speech">
+                            <div class="avatar">
+                                <img src="https://examples.tocas-ui.com/images/user.png">
+                            </div>
+                            <div class="content">猜猜我在做什麼？</div>
+                        </div>
+                    </div>
+                    <!-- / 左側群組 -->
+
+                    <!-- 右側群組 -->
+                    <div class="right circular group">
+                        <div class="speech">
+                            <div class="avatar">
+                                <img src="https://examples.tocas-ui.com/images/user2.png">
+                            </div>
+                            <div class="content">額⋯⋯</div>
+                        </div>
+                        <div class="speech">
+                            <div class="avatar">
+                                <img src="https://examples.tocas-ui.com/images/user2.png">
+                            </div>
+                            <div class="content">跟我聊天？</div>
+                        </div>
+                    </div>
+                    <!-- / 右側群組 -->
                 </div>
-                <div class="ui bottom black attached button font-style" v-else @click="login">投給這組</div>
-                
+                <!-- / 對話氣泡 -->
             </div>
-            <div class="twelve wide column">
-                <div class="ui piled segment project-content-text">
-                    {{ items.description }}
-                </div>
-                <h4 class="ui horizontal divider header">
-                    <i class="image icon"></i> 海報預覽
-                </h4>
-                <div class="ui fluid images">
-                    <img v-img:name v-for="(item, index) in items.photo" :key="index" v-bind:src="item" class="team-images" />
+            <!-- / 中部主要聊天訊息 -->
+
+            <!-- 底部輸入欄位 -->
+            <div class="ts bottom attached segment">
+                <div class="ts grid">
+                    <div class="stretched column">
+                        <div class="ts fluid input">
+                            <textarea rows="5" placeholder="在此輸入文字⋯⋯"></textarea>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="ts button">送出</div>
+                    </div>
                 </div>
             </div>
-          
+            <!-- / 底部輸入欄位 -->
         </div>
+        <!-- / 左側欄位 -->
+    </div>
+    <!-- / 主要容器 -->
     </div>
 </template>
 
@@ -75,6 +159,7 @@
                 items: {},
                 activitys: {},
                 voting: '',
+                activity: '',
                 isLogin: false,
                 verifResult:'',
                 username: '',
@@ -148,7 +233,7 @@
                     self.items = res.data.info;
                     self.voting = res.data.voting;
                     self.message = res.data.status;
-                    console.log(self.items);
+                    self.activity = res.data.info.activity;
                 });
             axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
             axios.get('//127.0.0.1:8000/login/status')

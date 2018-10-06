@@ -71,7 +71,7 @@ class SystemController extends Controller
         $userId     = $request->username;
         $password   = $request->password;
         
-        $cookie_jar = tempnam('./tmp','cookie.txt');
+        $cookie_jar = tempnam('/tmp','cookie.txt');
         
         $ch = curl_init();
 

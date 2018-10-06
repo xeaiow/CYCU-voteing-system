@@ -1,59 +1,59 @@
 <template>
     <div>
-        <div class="ui inverted menu cycuvote-theme cycuvote-menu fixed">
-            <a class="active item font-style" @click="$router.push('/')">中原大學資訊管理學系投票系統</a>
-            <a class="item font-style" @click="$router.push('/')">活動列表</a>
-            <a class="item font-style" @click="$router.push('/finished')">公佈欄</a>
-            <div class="right menu">
-                <a class="item font-style" v-if="token">{{ this.username }} 您好</a>
-                <a class="item font-style" v-if="token" @click="logout">登出</a>
-                <a class="item font-style" v-if="!token" @click="$router.push('/login')">登入</a>
+
+    <!-- 聚焦看板 -->
+    <div class="ts center aligned attached very padded segment">
+        <div class="ts container">
+            <!-- 留白 -->
+            <div class="ts hidden divider"></div>
+            <!-- / 留白 -->
+
+            <!-- 標題 -->
+            <div class="ts massive header">
+                {{ info.title }}
+                <div class="sub header">
+                    {{ info.description }}
+                </div>
             </div>
+            <!-- / 標題 -->
+
+            <!-- 留白 -->
+            <div class="ts hidden divider"></div>
+            <!-- / 留白 -->
+
+            <button class="ts button" @click="$router.push('/')">回活動列表</button>
+
+            <!-- 留白 -->
+            <div class="ts hidden divider"></div>
+            <!-- / 留白 -->
         </div>
+    </div>
+    <!-- / 聚焦看板 -->
 
-        <div class="ui grid cycuvote-container">
-
-            <div class="eight wide column centered center aligned">
-                <div class="ui negative message" v-if="message">
-                    <div class="header">
-                        The page you were looking for doesn't exist.
+    <!-- 主要片段 -->
+    <div class="ts center aligned attached vertically very padded secondary segment">
+        <!-- 容器 -->
+        <div class="ts container">
+            <!-- 卡片群組 -->
+            <div class="ts stackable three flatted cards">
+                <!-- 單個卡片 -->
+                <div class="ts card" v-for="(item, index) in items" :key="index" @click="$router.push({path:'/group/' + item._id})">
+                    <div class="image">
+                        <img v-bind:src="item.img">
                     </div>
-                    <p>
-                        You may have mistyped the address or the page may have moved.
-                    </p>
-                </div>
-            </div>
-
-            <div class="sixteen wide column centered center aligned" v-if="!message">
-                <div class="sixteen wide column">
-                    <h2 class="ui icon header center aligned">
-                        <i class="lab icon"></i>
-                        <div class="content font-style">
-                            {{ info.title }}
-                        </div>
-                        <div class="sub header">{{ info.description }}</div>
-                    </h2>
-                </div>
-            </div>
-
-            <div class="sixteen wide column" v-if="!message">
-                <div class="ui stackable three column grid">
-                    <div class="column" v-for="(item, index) in items" :key="index">
-                        <div class="ui cards stackable">
-                            <div class="card pointer" @click="$router.push({path:'/group/' + item._id})">
-                                <div class="content center aligned">
-                                    {{ item.groups }}
-                                </div>
-                                <div class="image">
-                                    <img v-bind:src="item.img" />
-                                </div>
-                            </div>
-                        </div>
+                    <div class="left aligned content">
+                        <div class="description">{{ item.groups }}</div>
                     </div>
                 </div>
+                <!-- / 單個卡片 -->
+                
             </div>
-
+            <!-- / 卡片群組 -->
         </div>
+        <!-- / 容器 -->
+    </div>
+    <!-- / 主要片段 -->
+
     </div>
 </template>
 
