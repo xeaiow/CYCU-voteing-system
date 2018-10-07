@@ -63,13 +63,14 @@ class SystemController extends Controller
         curl_close($ch2);
 
 
-        $dept = array('資訊管理學系一年甲班', '資訊管理學系一年乙班', '資訊管理學系二年甲班', '資訊管理學系二年乙班', '資訊管理學系三年甲班', '資訊管理學系三年乙班', '資訊管理系碩士班二年級');
-
+        $dept = array('資訊管理學系一年甲班', '資訊管理學系一年乙班', '資訊管理學系二年甲班', '資訊管理學系二年乙班', '資訊管理學系三年甲班', '資訊管理學系三年乙班');
 
         // 判斷系級或資格不符直接剔除
         if ($orders['type2'] !== "student" || !in_array($orders['i_DEPT_NAME_C'], $dept, true))
         {
+            $response['ss'] = mb_substr($orders['i_DEPT_NAME_C'], 0, 7);
             $response['status'] = false;
+            $response['msg'] = 2;
             return json_encode($response);
         }
 
@@ -109,8 +110,8 @@ class SystemController extends Controller
         if ( $thisGroups->where('group_id', $group_id)->count() == 1 || $votingLimit >= 3 )
         {
             $response['status'] = false;
+            $response['msg'] = 1;
             return json_encode($response);
-            return false;
         }
         else
         {
@@ -119,7 +120,7 @@ class SystemController extends Controller
 
             // 更新票數
             Groups::Where('_id', $group_id)->increment('count');
-                
+            $response['count'] = 3 - ($votingLimit + 1);
             $response['status'] = true;
             return json_encode($response);
         }

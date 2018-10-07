@@ -184,62 +184,81 @@
                 
                 var selfRoute   = this.$route.params.id;
                 var self        = this;
-                var dept        = [ "資管一甲", "資管一乙", "資管二甲", "資管二乙", "資管三甲", "資管三乙", "資管四甲", "資管四乙"];
                 
-                self.$swal({
-
-                    title: '將神聖一票投給這組？',
-                    text: "送出後不可反悔，且不可重複投同一組。",
+                swal.mixin({
+                    input: 'text',
+                    confirmButtonText: '繼續 &rarr;',
                     showCancelButton: true,
-                    confirmButtonText: "確定",
-                    cancelButtonText: "考慮"
-
-                    }).then(function (res) {
-
-                        // if (dept.indexOf(self.level) == -1)
-                        // {
-                        //     self.$swal({
-                        //         title: '您的系級不適用此活動！',
-                        //         text: self.level + "尚無權限參與此投票",
-                        //         confirmButtonText: "知道了",
-                        //     });
-                        //     return false;
-                        // }
-
-                        swal.mixin({
-                            input: 'text',
-                            confirmButtonText: '繼續 &rarr;',
+                    progressSteps: ['1', '2']
+                }).queue([
+                {
+                    title: '身分驗證',
+                    text: '請輸入您的 i-Touch 帳號'
+                },
+                '輸入您 i-Touch 密碼',
+                ]).then((result) => {
+                    
+                    if (result.value) {
+                        self.$swal({
+                            title: '將神聖一票投給這組？',
+                            text: "送出後不可反悔，且不可重複投同一組。",
                             showCancelButton: true,
-                            progressSteps: ['1', '2']
-                        }).queue([
-                        {
-                            title: '身分驗證',
-                            text: '請輸入您的 i-Touch 帳號'
-                        },
-                        '輸入您 i-Touch 密碼',
-                        ]).then((result) => {
-                            // if (result.value) {
-                            //     // swal({
-                            //     // title: 'All done!',
-                            //     // html:
-                            //     //     'Your answers: <pre><code>' +
-                            //     //     JSON.stringify(result.value) +
-                            //     //     '</code></pre>',
-                            //     // confirmButtonText: 'Lovely!'
-                            //     // })
-                                
-                            // }
-                                axios.post('//127.0.0.1:8000/api/loginitouch', {
-                                    userId: result.value[0],
-                                    password: result.value[1],
-                                    group_id: selfRoute
+                            confirmButtonText: "確定",
+                            cancelButtonText: "考慮"
+                        }).then(function (res) {
+                            axios.post('//127.0.0.1:8000/api/loginitouch', {
+                                userId: result.value[0],
+                                password: result.value[1],
+                                group_id: selfRoute
+                            })
+                            .then(function (res) { 
+                                if (!res.data.status) {
+                                    switch (res.data.msg) {
+                                        case 1:
+                                            swal({
+                                                title: '你沒機會投了，明年再來',
+                                                width: 600,
+                                                padding: '3em',
+                                                confirmButtonText: "喔喔",
+                                                backdrop: `
+                                                    rgba(0,0,123,0.4)
+                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                                    center left
+                                                    no-repeat
+                                                `
+                                            });
+                                            break;
+                                        case 2:
+                                        console.log(res)
+                                            swal({
+                                                title: '偵測到沒投票的權利，你一定是邊緣人',
+                                                width: 600,
+                                                padding: '3em',
+                                                confirmButtonText: "喔喔",
+                                                backdrop: `
+                                                    rgba(0,0,123,0.4)
+                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                                    center left
+                                                    no-repeat
+                                                `
+                                            });
+                                        default:
+                                            break;
+                                    }
+                                    return false;
+                                }
+                                swal({
+                                    position: 'top-end',
+                                    type: 'success',
+                                    title: '投票成功！',
+                                    text: '這個競賽只剩下 ' + res.data.count + ' 次投票機會',
+                                    showConfirmButton: false,
+                                    timer: 2700
                                 })
-                                .then(function (res) { 
-                                    console.log(res);
-                                });
-                        })
-
-                    });
+                            });
+                        });
+                    }
+                })
             }     
         },
         mounted: function() {
