@@ -18,18 +18,6 @@
             <div class="ts secondary menu">
                 <div class="header item" @click="$router.push('/')">活動列表</div>
                 <a class="item" @click="$router.push('/finished')">公佈欄</a>
-
-                <!-- 右側選單 -->
-                <div class="right menu">
-                    <div class="fitted item">
-                        <div class="ts icon input">
-                            <input type="text" placeholder="搜尋⋯⋯">
-                            <i class="search link icon"></i>
-                        </div>
-                    </div>
-                    <a href="#!" class="item">登出</a>
-                </div>
-                <!-- / 右側選單 -->
             </div>
 
             <!-- 活動卡片群組 -->
@@ -69,6 +57,8 @@
 
         </div>
         <!-- / 主要容器 -->
+
+
     </div>
 </template>
 

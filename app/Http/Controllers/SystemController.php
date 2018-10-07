@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Redirect;
 use Session;
 use App\Users;
+use App\Groups;
+use App\Vote;
+
 
 class SystemController extends Controller
 {
@@ -19,12 +22,13 @@ class SystemController extends Controller
     public function login_touch (Request $request)
     {
 
-        $url        = "http://cmap.cycu.edu.tw:8080//MyMentor/stdLogin.do" ;
-        $ref_url    = "http://cmap.cycu.edu.tw:8080/MyMentor/courseCreditStructure.do";
-        $userId     = //$request->userId;
-        $password   = //$request->password;
+        $url        = "https://itouch.cycu.edu.tw/active_system/login/login2.jsp" ;
+        $ref_url    = "https://itouch.cycu.edu.tw/active_project/cycu2100h_06/acpm3/json/ss_loginUser.jsp";
+        $userId     = $request->userId;
+        $password   = $request->password;
+        $group_id  = $request->group_id;
         
-        $cookie_jar = tempnam('./tmp','cookie.txt');
+        $cookie_jar = "./cookie.txt";
         
         $ch = curl_init();
 
@@ -40,14 +44,14 @@ class SystemController extends Controller
         curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "userId=10244257&password=Dream0919");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "UserNm=".$userId."&UserPasswd=".$password);
         curl_exec ($ch);
 
         curl_close ($ch);
         
         $ch2 = curl_init();
 
-        curl_setopt($ch2, CURLOPT_URL, "http://cmap.cycu.edu.tw:8080/MyMentor/courseCreditStructure.do");
+        curl_setopt($ch2, CURLOPT_URL, "https://itouch.cycu.edu.tw/active_project/cycu2100h_06/acpm3/json/ss_loginUser.jsp");
         curl_setopt($ch2, CURLOPT_HEADER, 0);
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch2, CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)" );
@@ -55,13 +59,76 @@ class SystemController extends Controller
 
         curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_jar);
         
-        $orders = curl_exec($ch2);
+        $orders = (array) json_decode(curl_exec($ch2));
         curl_close($ch2);
-        
-        preg_match_all("/\<div id=\"selectbox\"\>(.*?)\<\/div\>/is", $orders, $arr);
 
-        echo preg_replace('/\s+/', '', strip_tags($arr[0][0]));
+
+        $dept = array('資訊管理學系一年甲班', '資訊管理學系一年乙班', '資訊管理學系二年甲班', '資訊管理學系二年乙班', '資訊管理學系三年甲班', '資訊管理學系三年乙班', '資訊管理系碩士班二年級');
+
+
+        // 判斷系級或資格不符直接剔除
+        if ($orders['type2'] !== "student" || !in_array($orders['i_DEPT_NAME_C'], $dept, true))
+        {
+            $response['status'] = false;
+            return json_encode($response);
+        }
+
+        // 取得這個組別的競賽 id
+        $groups = Groups::Where('_id', $group_id)->first();
+
+        $student_id = $orders['idcode'];
+
+        $voting = [
+            'student_id'    => $student_id,
+            'group_id'      => $group_id,
+            'activity_id'   => $groups['activity'],
+            'info'          => $orders
+        ];
+
+        // 如果不是第一次登入
+        if (Users::Where('idcode', $orders['idcode'])->count() != 1)
+        {
+            // 新增使用者資料
+            Users::create($orders);
+
+            // 新增投票資料
+            Vote::create($voting);
+
+            // 更新票數
+            Groups::Where('_id', $group_id)->increment('count');
+
+            $response['status'] = true;
+            return json_encode($response);
+        }
+
+        // 目前被載入的活動
+        $thisGroups = Vote::where('student_id', $orders['idcode'])->where('activity_id', $groups['activity']);
+        $votingLimit = $thisGroups->count();
+
+        // 判斷是否已經投過這組 或 判斷是否對這個活動投超過三次
+        if ( $thisGroups->where('group_id', $group_id)->count() == 1 || $votingLimit >= 3 )
+        {
+            $response['status'] = false;
+            return json_encode($response);
+            return false;
+        }
+        else
+        {
+            // 新增投票資料
+            Vote::create($voting);
+
+            // 更新票數
+            Groups::Where('_id', $group_id)->increment('count');
+                
+            $response['status'] = true;
+            return json_encode($response);
+        }
     }
+
+    public function login_touchtest ()
+    {
+        return $thisGroups = Vote::where('student_id', '10694024')->where('activity_id', '5a36a9422096c809a4004322')->count();
+    } 
 
     // 登入作業
     public function login_handle (Request $request)

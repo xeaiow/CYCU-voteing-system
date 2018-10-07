@@ -189,36 +189,55 @@
                 self.$swal({
 
                     title: '將神聖一票投給這組？',
-                    text: "送出後不可反悔，且不可重複投票。",
+                    text: "送出後不可反悔，且不可重複投同一組。",
                     showCancelButton: true,
                     confirmButtonText: "確定",
                     cancelButtonText: "考慮"
 
                     }).then(function (res) {
 
-                        if (dept.indexOf(self.level) == -1)
+                        // if (dept.indexOf(self.level) == -1)
+                        // {
+                        //     self.$swal({
+                        //         title: '您的系級不適用此活動！',
+                        //         text: self.level + "尚無權限參與此投票",
+                        //         confirmButtonText: "知道了",
+                        //     });
+                        //     return false;
+                        // }
+
+                        swal.mixin({
+                            input: 'text',
+                            confirmButtonText: '繼續 &rarr;',
+                            showCancelButton: true,
+                            progressSteps: ['1', '2']
+                        }).queue([
                         {
-                            self.$swal({
-                                title: '您的系級不適用此活動！',
-                                text: self.level + "尚無權限參與此投票",
-                                confirmButtonText: "知道了",
-                            });
-                            return false;
-                        }
-
-                        axios.get('//127.0.0.1:8000/voting/' + selfRoute)
-                        .then(function (res) {
-
-                            if (res.data.status == true)
-                            {
-                                self.mess('已完成投票！', 'success');
-                                self.voting = 1;
-                                return false;
-                            }
-                            self.mess('投票失敗！', 'error');
-                        });
-
-                    }).catch(function () {
+                            title: '身分驗證',
+                            text: '請輸入您的 i-Touch 帳號'
+                        },
+                        '輸入您 i-Touch 密碼',
+                        ]).then((result) => {
+                            // if (result.value) {
+                            //     // swal({
+                            //     // title: 'All done!',
+                            //     // html:
+                            //     //     'Your answers: <pre><code>' +
+                            //     //     JSON.stringify(result.value) +
+                            //     //     '</code></pre>',
+                            //     // confirmButtonText: 'Lovely!'
+                            //     // })
+                                
+                            // }
+                                axios.post('//127.0.0.1:8000/api/loginitouch', {
+                                    userId: result.value[0],
+                                    password: result.value[1],
+                                    group_id: selfRoute
+                                })
+                                .then(function (res) { 
+                                    console.log(res);
+                                });
+                        })
 
                     });
             }     
