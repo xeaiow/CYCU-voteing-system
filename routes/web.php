@@ -19,7 +19,8 @@ Route::get('/groups/top/{id}', 'VoteController@get_groups_top');
 Route::get('/group/info/{id}', 'VoteController@get_group_info');
 
 Route::post('/api/loginitouch', 'SystemController@login_touch');
-Route::get('/api/loginitouchtest', 'SystemController@login_touchtest');
+
+Route::post('/api/voting', 'SystemController@voting');
 
 Route::post('/login/handle', 'SystemController@login_handle');
 

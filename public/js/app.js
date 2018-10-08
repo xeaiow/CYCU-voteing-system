@@ -80874,6 +80874,16 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -81030,8 +81040,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 
     data: function data() {
+        var _ref;
 
-        return {
+        return _ref = {
+            token: '',
+            name: '',
+            dept: '',
             items: {},
             activitys: {},
             voting: '',
@@ -81039,10 +81053,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             isLogin: false,
             verifResult: '',
             username: '',
-            password: '',
-            token: '',
-            level: ''
-        };
+            password: ''
+        }, _defineProperty(_ref, 'token', ''), _defineProperty(_ref, 'level', ''), _ref;
     },
     methods: {
         mess: function mess(text, type) {
@@ -81072,55 +81084,104 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }, '輸入您 i-Touch 密碼']).then(function (result) {
 
                 if (result.value) {
+
                     self.$swal({
                         title: '將神聖一票投給這組？',
                         text: "送出後不可反悔，且不可重複投同一組。",
                         showCancelButton: true,
                         confirmButtonText: "確定",
                         cancelButtonText: "考慮"
+
                     }).then(function (res) {
+
                         axios.post('//127.0.0.1:8000/api/loginitouch', {
                             userId: result.value[0],
-                            password: result.value[1],
-                            group_id: selfRoute
-                        }).then(function (res) {
-                            if (!res.data.status) {
-                                switch (res.data.msg) {
-                                    case 1:
-                                        swal({
-                                            title: '你沒機會投了，明年再來',
-                                            width: 600,
-                                            padding: '3em',
-                                            confirmButtonText: "喔喔",
-                                            backdrop: '\n                                                rgba(0,0,123,0.4)\n                                                url("https://sweetalert2.github.io//images/nyan-cat.gif")\n                                                center left\n                                                no-repeat\n                                            '
-                                        });
-                                        break;
-                                    case 2:
-                                        console.log(res);
-                                        swal({
-                                            title: '偵測到沒投票的權利，你一定是邊緣人',
-                                            width: 600,
-                                            padding: '3em',
-                                            confirmButtonText: "喔喔",
-                                            backdrop: '\n                                                rgba(0,0,123,0.4)\n                                                url("https://sweetalert2.github.io//images/nyan-cat.gif")\n                                                center left\n                                                no-repeat\n                                            '
-                                        });
-                                    default:
-                                        break;
-                                }
+                            password: result.value[1]
+                        }).then(function (response) {
+
+                            var res = response.data;
+
+                            if (!res.status) {
+                                swal({
+                                    type: 'error',
+                                    title: '糟糕',
+                                    text: '帳號或密碼錯誤！'
+                                });
                                 return false;
                             }
-                            swal({
-                                position: 'top-end',
-                                type: 'success',
-                                title: '投票成功！',
-                                text: '這個競賽只剩下 ' + res.data.count + ' 次投票機會',
-                                showConfirmButton: false,
-                                timer: 2700
-                            });
+
+                            sessionStorage.setItem('token', res.token);
+                            sessionStorage.setItem('name', res.name);
+                            sessionStorage.setItem('dept', res.dept);
+                            console.log(res.token);
+                            self.token = res.token;
+                            self.name = res.name;
+                            self.dept = res.dept;
+
+                            self.votingGroup();
                         });
                     });
                 }
             });
+        },
+        deptLabel: function deptLabel(dept) {
+            swal({
+                position: 'top-end',
+                type: 'error',
+                title: '啊就' + dept + '有什麼好點的！',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        },
+        votingGroup: function votingGroup() {
+            if (sessionStorage.getItem('token') == null) {
+                this.inputItouch();
+            } else {
+
+                var group_id = this.$route.params.id;
+                console.log(sessionStorage.getItem('token'));
+                axios.post('//127.0.0.1:8000/api/voting', {
+                    token: sessionStorage.getItem('token'),
+                    group_id: group_id
+                }).then(function (response) {
+
+                    var res = response;
+
+                    if (!res.status) {
+                        switch (res.msg) {
+                            case 1:
+                                swal({
+                                    title: '你沒機會投了，明年再來',
+                                    width: 600,
+                                    padding: '3em',
+                                    confirmButtonText: "喔喔",
+                                    backdrop: '\n                                                    rgba(0,0,123,0.4)\n                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")\n                                                    center left\n                                                    no-repeat\n                                                '
+                                });
+                                break;
+                            case 2:
+                                swal({
+                                    title: '偵測到沒投票的權利，你一定是邊緣人',
+                                    width: 600,
+                                    padding: '3em',
+                                    confirmButtonText: "我是邊緣人QQ",
+                                    backdrop: '\n                                                    rgba(0,0,123,0.4)\n                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")\n                                                    center left\n                                                    no-repeat\n                                                '
+                                });
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+
+                    swal({
+                        position: 'top-end',
+                        type: 'success',
+                        title: '投票成功！',
+                        text: '這個競賽剩下 ' + res.count + ' 次投票機會',
+                        showConfirmButton: false,
+                        timer: 2700
+                    });
+                });
+            }
         }
     },
     mounted: function mounted() {
@@ -81128,6 +81189,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         var self = this;
         var router = this.$router;
+
+        if (sessionStorage.getItem('name') != null) {
+            this.name = sessionStorage.getItem('name');
+        }
 
         axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (res) {
             self.items = res.data.info;
@@ -81147,7 +81212,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             self.token = res.data.token;
             self.username = res.data.username;
             self.level = res.data.level;
-        }).catch(function () {});
+        });
     }
 });
 
@@ -81160,20 +81225,28 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("div", { staticClass: "ts large link attached inverted info menu" }, [
+      _c("div", { staticClass: "ts container" }, [
+        _c("div", { staticClass: "header item" }, [
+          _vm._v("Hi, " + _vm._s(_vm.name))
+        ])
+      ])
+    ]),
+    _vm._v(" "),
     _c("div", { staticClass: "ts very padded text container" }, [
       _c("div", { staticClass: "ts card" }, [
         _c("div", { staticClass: "center aligned padded content" }, [
           _c("div", { staticClass: "ts large header" }, [
             _vm._v(
-              "\n                " +
+              "\n                    " +
                 _vm._s(_vm.items.groups) +
-                "\n                "
+                "\n                    "
             ),
             _c("div", { staticClass: "sub header" }, [
               _vm._v(
-                "\n                    " +
+                "\n                        " +
                   _vm._s(_vm.items.description) +
-                  "\n                "
+                  "\n                    "
               )
             ])
           ])
@@ -81190,7 +81263,7 @@ var render = function() {
               staticClass: "ts positive button",
               on: {
                 click: function($event) {
-                  _vm.inputItouch()
+                  _vm.votingGroup()
                 }
               }
             },
@@ -81211,7 +81284,11 @@ var render = function() {
                 {
                   key: index,
                   staticClass: "ts horizontal link label",
-                  attrs: { href: "#!" }
+                  on: {
+                    click: function($event) {
+                      _vm.deptLabel(voter)
+                    }
+                  }
                 },
                 [_vm._v(_vm._s(voter))]
               )
