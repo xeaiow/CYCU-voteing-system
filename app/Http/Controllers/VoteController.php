@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Activity;
 use App\Groups;
 use App\Vote;
+use App\Users;
 use Redirect;
 use Session;
 
@@ -83,24 +84,40 @@ class VoteController extends Controller
     {
         $today    = date('Y-m-d');
 
-        $getGroupsInfo = Groups::Where('_id', $request->id)->first();
+        $getGroupsInfo = Groups::where('_id', $request->id)->first(['activity', 'groups', 'description', 'photo', 'img']);
 
-        $finished = Activity::Where('_id', $getGroupsInfo['activity'])->Where('started', '<=', $today)->Where('deadline', '>=', $today)->count();
-        
-        $voting   = Vote::Where('student_id', Session::get('username'))->Where('activity_id', $getGroupsInfo['activity'])->count();
+        $finished = Activity::where('_id', $getGroupsInfo['activity'])->where('started', '<=', $today)->where('deadline', '>=', $today)->count();
+
+        $fakerData = Users::where('idcode', $request->username)->where('token', $request->token)->count();
+
+        if ($fakerData == 0)
+        {
+            $response['status'] = false;
+            return json_encode($response);
+        }
+
+        // 判斷該使用者是否已經投過此組，或投過三次該活動
+        $voteLimit = Vote::where('idcode', $request->username)->where('activity_id', $getGroupsInfo['activity']);
+        $vote = false;
+
+        if ($voteLimit->count() >= 3 || $voteLimit->where('group_id', $request->id)->count() > 0)
+        {
+            $vote = true;
+        }
 
         if ($finished == 1)
         {
             $response['info']   = $getGroupsInfo;
             $response['status'] = true;
             $response['finished'] = ( $finished == 1 ? false : true ); // 是否已開票，否
-            $response['voting'] = $voting;
+            $response['voting'] = $vote;
 
             return json_encode($response);
         }
 
         $response['info']   = $getGroupsInfo;
         $response['finished'] = true;
+        $response['voting'] = $vote;
         $response['status'] = false;
 
         echo json_encode($response);

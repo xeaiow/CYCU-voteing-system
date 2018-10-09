@@ -8,5 +8,5 @@ class Vote extends Eloquent
 {
     protected $primaryKey = '_id';
     protected $collection = 'vote';
-    protected $fillable = ['group_id', 'class', 'activity_id', 'info'];
+    protected $fillable = ['group_id', 'class', 'activity_id', 'id', 'idcode', 'token'];
 }

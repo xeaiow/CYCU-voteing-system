@@ -1,9 +1,5 @@
 <?php
 
-// Route::get('/', 'VoteController@activity_lists');
-// Route::get('/activity/{id}', 'VoteController@activity');
-// Route::get('/activity/{id}/info', 'VoteController@activity_content');
-
 Route::get('/activity/get', 'VoteController@get_activity');
 
 Route::get('/finished_activity/get', 'VoteController@get_finished_activity');
@@ -16,17 +12,11 @@ Route::get('/groups/info/{id}', 'VoteController@get_groups_info');
 
 Route::get('/groups/top/{id}', 'VoteController@get_groups_top');
 
-Route::get('/group/info/{id}', 'VoteController@get_group_info');
+Route::post('/group/info', 'VoteController@get_group_info');
 
 Route::post('/api/loginitouch', 'SystemController@login_touch');
 
 Route::post('/api/voting', 'SystemController@voting');
-
-Route::post('/login/handle', 'SystemController@login_handle');
-
-Route::get('/login/status', 'SystemController@login_status');
-
-Route::post('/login/save', 'SystemController@login_save_handle');
 
 Route::post('/activity/create', 'PineappleController@activity_create');
 
@@ -53,13 +43,6 @@ Route::group(['prefix' => '/', 'middleware' => 'ManagerisLoginMiddleware'], func
         Route::get('/pineapple/activity/groups/{id}/get', 'PineappleController@get_activity_groups');
         Route::get('/pineapple/logout', 'PineappleController@logout_handle');
 });
-
-// Route::get('/login', 'SystemController@login');
-
-// Route::get('/ss', function () {
-//     return view('hello');
-// });
-
 
 Route::any('{all}', function () {
     return view('welcome');

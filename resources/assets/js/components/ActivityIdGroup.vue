@@ -33,7 +33,7 @@
                 <div class="center aligned padded content">
 
                     <!-- CTA：矚目動作按鈕 -->
-                    <button class="ts positive button" @click="votingGroup()">投給這組 😃</button>
+                    <button class="ts positive button" @click="votingGroup()" :disabled="vote">投給這組 😃</button>
                     <!-- / CTA：矚目動作按鈕 -->
                     <div class="fb-share-button" data-href="http://cr.im.cycu.edu.tw:90/" data-layout="button" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">快點分享</a></div>
 
@@ -162,34 +162,19 @@
     export default {
 
         data: function () {
-
             return {
                 token: '',
                 name: '',
                 dept: '',
                 items: {},
                 activitys: {},
-                voting: '',
-                activity: '',
-                isLogin: false,
-                verifResult:'',
-                username: '',
-                password: '',
-                token: '',
-                level: ''
+                vote: false
             }
         },
         methods: {
-            mess: function (text, type) {
-
-                this.$swal(text, '', type)
-            },
             logout: function () {
                 axios.get('//127.0.0.1:8000/logout')
                 this.$router.go('/');
-            },
-            login: function () {
-                this.$router.push('/login');
             },
             inputItouch: function () {
                 
@@ -221,18 +206,7 @@
                             if (!res.status) {
                                 switch (res.msg) {
                                     case 1:
-                                        swal({
-                                            title: '偵測到沒投票的權利，你一定是邊緣人',
-                                            width: 600,
-                                            padding: '3em',
-                                            confirmButtonText: "我是邊緣人QQ",
-                                            backdrop: `
-                                                rgba(0,0,123,0.4)
-                                                url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                                center left
-                                                no-repeat
-                                            `
-                                        });
+                                        self.errorMessage("偵測到沒投票的權利，你一定是邊緣人", "我是邊緣人QQ");
                                         break;
                                     default:
                                         swal({
@@ -248,6 +222,7 @@
 
                             sessionStorage.setItem('token', res.token);
                             sessionStorage.setItem('name', res.name);
+                            sessionStorage.setItem('username', res.username);
                             sessionStorage.setItem('dept', res.dept);
                             self.token = res.token;
                             self.name = res.name;
@@ -268,11 +243,14 @@
                 })
             },
             votingGroup: function () {
+
                 if (sessionStorage.getItem('token') == null) {
+
                     this.inputItouch();
                 }
                 else {
-                    let self = this;
+
+                    var self = this;
 
                     this.$swal({
                         title: '將神聖一票投給這組？',
@@ -281,9 +259,11 @@
                         confirmButtonText: "確定",
                         cancelButtonText: "考慮"                 
                     }).then(function (res) {
+
                         if (res.dismiss == "cancel") {
                             return false;
                         }
+
                         let group_id = self.$route.params.id;
 
                         axios.post('//127.0.0.1:8000/api/voting', {
@@ -293,7 +273,6 @@
                         .then(function (response) {
 
                             let res = response.data;
-                            let self = this;
 
                             if (res.status) {
                                 swal({
@@ -304,59 +283,40 @@
                                     showConfirmButton: false,
                                     timer: 2700
                                 });
+                                self.vote = true;
                                 return;
                             }
                             switch (res.msg) {
-                                case 1:
-                                    swal({
-                                        title: '你沒機會投了，明年再來',
-                                        width: 600,
-                                        padding: '3em',
-                                        confirmButtonText: "喔喔",
-                                        backdrop: `
-                                            rgba(0,0,123,0.4)
-                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                            center left
-                                            no-repeat
-                                        `
-                                    });
+                                case 1: 
+                                    self.errorMessage("你沒機會投了，明年再來", "喔喔");
                                     break;
                                 case 2:
-                                    swal({
-                                        title: '偵測到沒投票的權利，你一定是邊緣人',
-                                        width: 600,
-                                        padding: '3em',
-                                        confirmButtonText: "我是邊緣人QQ",
-                                        backdrop: `
-                                            rgba(0,0,123,0.4)
-                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                            center left
-                                            no-repeat
-                                        `
-                                    });
+                                    self.errorMessage("投過了喇，還沒睡醒？", "知道了");
                                     break;
                                 case 3:
-                                    swal({
-                                        title: 'token 失效，請重新登入！',
-                                        width: 600,
-                                        padding: '3em',
-                                        confirmButtonText: "嗯嗯",
-                                        backdrop: `
-                                            rgba(0,0,123,0.4)
-                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                            center left
-                                            no-repeat
-                                        `
-                                    });
-                                    //TODO:: call 重新登入的 function
+                                    self.errorMessage("token 失效，請重新登入！", "嗯嗯");
+                                    self.inputItouch();
                                     break;
-                                    default:
-                                        break;
-                                }
-                                return false;
+                                default:
+                                    break;
+                            } 
                         });
                     });
                 }
+            },
+            errorMessage: function (title, buttonText) {
+                return swal({
+                    title: title,
+                    width: 600,
+                    padding: '3em',
+                    confirmButtonText: buttonText,
+                    backdrop: `
+                        rgba(0,0,123,0.4)
+                        url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                        center left
+                        no-repeat
+                    `
+                });
             }
         },
         mounted: function() {
@@ -368,26 +328,21 @@
                 this.name = sessionStorage.getItem('name');
             }
 
-            axios.get('//127.0.0.1:8000/group/info/' + this.$route.params.id).then(function (res) 
-                {
-                    self.items = res.data.info;
-                    self.voting = res.data.voting;
-                    self.message = res.data.status;
-                    self.activity = res.data.info.activity;
-                });
-            axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
-            axios.get('//127.0.0.1:8000/login/status')
-            .then(function (res) {
+            axios.post('//127.0.0.1:8000/group/info',{
+                id: this.$route.params.id,
+                token: sessionStorage.getItem('token'),
+                username: sessionStorage.getItem('username')
 
-                if (res.data.status == false)
-                {
-                    return false;
+            }).then(function (res) {
+                if (!res.data.status) {
+                    self.inputItouch();
+                    return;
                 }
-                self.isLogin    = true;
-                self.token      = res.data.token;
-                self.username   = res.data.username;
-                self.level      = res.data.level;
+                self.vote = res.data.voting;
+                self.items = res.data.info;
+                
             });
+            axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {this.activitys = response.data})
         }
     }
 </script>
