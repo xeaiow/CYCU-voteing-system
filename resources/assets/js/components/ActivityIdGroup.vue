@@ -210,43 +210,50 @@
                 ]).then((result) => {
                     
                     if (result.value) {
+                        axios.post('//127.0.0.1:8000/api/loginitouch', {
+                            userId: result.value[0],
+                            password: result.value[1]
+                        })
+                        .then(function (response) {
 
-                        self.$swal({
-                            title: '將神聖一票投給這組？',
-                            text: "送出後不可反悔，且不可重複投同一組。",
-                            showCancelButton: true,
-                            confirmButtonText: "確定",
-                            cancelButtonText: "考慮"
-                            
-                        }).then(function (res) {
+                            let res = response.data;
 
-                            axios.post('//127.0.0.1:8000/api/loginitouch', {
-                                userId: result.value[0],
-                                password: result.value[1]
-                            })
-                            .then(function (response) {
-
-                                let res = response.data;
-
-                                if (!res.status) {
-                                    swal({
-                                        type: 'error',
-                                        title: '糟糕',
-                                        text: '帳號或密碼錯誤！'
-                                    });
-                                    return false;
+                            if (!res.status) {
+                                switch (res.msg) {
+                                    case 1:
+                                        swal({
+                                            title: '偵測到沒投票的權利，你一定是邊緣人',
+                                            width: 600,
+                                            padding: '3em',
+                                            confirmButtonText: "我是邊緣人QQ",
+                                            backdrop: `
+                                                rgba(0,0,123,0.4)
+                                                url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                                center left
+                                                no-repeat
+                                            `
+                                        });
+                                        break;
+                                    default:
+                                        swal({
+                                            type: 'error',
+                                            title: '糟糕',
+                                            text: '帳號或密碼錯誤！'
+                                        });
+                                        return false;
+                                        break;
                                 }
+                                return false;
+                            }
 
-                                sessionStorage.setItem('token', res.token);
-                                sessionStorage.setItem('name', res.name);
-                                sessionStorage.setItem('dept', res.dept);
-console.log(res.token);
-                                self.token = res.token;
-                                self.name = res.name;
-                                self.dept = res.dept;
+                            sessionStorage.setItem('token', res.token);
+                            sessionStorage.setItem('name', res.name);
+                            sessionStorage.setItem('dept', res.dept);
+                            self.token = res.token;
+                            self.name = res.name;
+                            self.dept = res.dept;
 
-                                self.votingGroup();
-                            });
+                            self.votingGroup();
                         });
                     }
                 })
@@ -265,52 +272,30 @@ console.log(res.token);
                     this.inputItouch();
                 }
                 else {
+                    let self = this;
 
-                    let group_id = this.$route.params.id;
-console.log(sessionStorage.getItem('token'));
-                    axios.post('//127.0.0.1:8000/api/voting', {
-                                token: sessionStorage.getItem('token'),
-                                group_id: group_id
-                            })
-                            .then(function (response) {
+                    this.$swal({
+                        title: '將神聖一票投給這組？',
+                        text: "送出後不可反悔，且不可重複投同一組。",
+                        showCancelButton: true,
+                        confirmButtonText: "確定",
+                        cancelButtonText: "考慮"                 
+                    }).then(function (res) {
+                        if (res.dismiss == "cancel") {
+                            return false;
+                        }
+                        let group_id = self.$route.params.id;
 
-                                let res = response;
+                        axios.post('//127.0.0.1:8000/api/voting', {
+                            token: sessionStorage.getItem('token'),
+                            group_id: group_id
+                        })
+                        .then(function (response) {
 
-                                if (!res.status) {
-                                    switch (res.msg) {
-                                        case 1:
-                                            swal({
-                                                title: '你沒機會投了，明年再來',
-                                                width: 600,
-                                                padding: '3em',
-                                                confirmButtonText: "喔喔",
-                                                backdrop: `
-                                                    rgba(0,0,123,0.4)
-                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                                    center left
-                                                    no-repeat
-                                                `
-                                            });
-                                            break;
-                                        case 2:
-                                            swal({
-                                                title: '偵測到沒投票的權利，你一定是邊緣人',
-                                                width: 600,
-                                                padding: '3em',
-                                                confirmButtonText: "我是邊緣人QQ",
-                                                backdrop: `
-                                                    rgba(0,0,123,0.4)
-                                                    url("https://sweetalert2.github.io//images/nyan-cat.gif")
-                                                    center left
-                                                    no-repeat
-                                                `
-                                            });
-                                        default:
-                                            break;
-                                    }
-                                    return false;
-                                }
+                            let res = response.data;
+                            let self = this;
 
+                            if (res.status) {
                                 swal({
                                     position: 'top-end',
                                     type: 'success',
@@ -318,8 +303,59 @@ console.log(sessionStorage.getItem('token'));
                                     text: '這個競賽剩下 ' + res.count + ' 次投票機會',
                                     showConfirmButton: false,
                                     timer: 2700
-                                })
-                            });
+                                });
+                                return;
+                            }
+                            switch (res.msg) {
+                                case 1:
+                                    swal({
+                                        title: '你沒機會投了，明年再來',
+                                        width: 600,
+                                        padding: '3em',
+                                        confirmButtonText: "喔喔",
+                                        backdrop: `
+                                            rgba(0,0,123,0.4)
+                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                            center left
+                                            no-repeat
+                                        `
+                                    });
+                                    break;
+                                case 2:
+                                    swal({
+                                        title: '偵測到沒投票的權利，你一定是邊緣人',
+                                        width: 600,
+                                        padding: '3em',
+                                        confirmButtonText: "我是邊緣人QQ",
+                                        backdrop: `
+                                            rgba(0,0,123,0.4)
+                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                            center left
+                                            no-repeat
+                                        `
+                                    });
+                                    break;
+                                case 3:
+                                    swal({
+                                        title: 'token 失效，請重新登入！',
+                                        width: 600,
+                                        padding: '3em',
+                                        confirmButtonText: "嗯嗯",
+                                        backdrop: `
+                                            rgba(0,0,123,0.4)
+                                            url("https://sweetalert2.github.io//images/nyan-cat.gif")
+                                            center left
+                                            no-repeat
+                                        `
+                                    });
+                                    //TODO:: call 重新登入的 function
+                                    break;
+                                    default:
+                                        break;
+                                }
+                                return false;
+                        });
+                    });
                 }
             }
         },

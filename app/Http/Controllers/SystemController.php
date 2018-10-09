@@ -12,16 +12,9 @@ use App\Vote;
 
 class SystemController extends Controller
 {
-    // 登入頁面
-    public function login ()
-    {
-        return view('login');
-    }
-    
     // 確認 iTouch 身分
     public function login_touch (Request $request)
     {
-
         $url        = "https://itouch.cycu.edu.tw/active_system/login/login2.jsp" ;
         $ref_url    = "https://itouch.cycu.edu.tw/active_project/cycu2100h_06/acpm3/json/ss_loginUser.jsp";
         $userId     = $request->userId;
@@ -63,22 +56,20 @@ class SystemController extends Controller
         curl_close($ch2);
 
 
-        $dept = array('資訊管理學系一年甲班', '資訊管理學系一年乙班', '資訊管理學系二年甲班', '資訊管理學系二年乙班', '資訊管理學系三年甲班', '資訊管理學系三年乙班', '資訊管理系碩士班二年級');
+        $dept = array('資訊管理學系一年甲班', '資訊管理學系一年乙班', '資訊管理學系二年甲班', '資訊管理學系二年乙班', '資訊管理學系三年甲班', '資訊管理學系三年乙班');
 
         // 判斷系級或資格不符直接剔除
         if ($orders['type2'] !== "student" || !in_array($orders['i_DEPT_NAME_C'], $dept, true))
         {
             $response['status'] = false;
-            $response['msg']    = 2;
+            $response['msg']    = 1; // 資格不符
             return json_encode($response);
         }
         else
         {
-            // 學號
-            $student_id = $userId;
             $token = bin2hex(random_bytes(32));
-
-            $orders['info'] = $token;
+            $orders['token'] = $token;
+            
             // 新增使用者資料
             Users::create($orders);
 
@@ -93,41 +84,26 @@ class SystemController extends Controller
 
     public function voting (Request $req)
     {
-        // 取得這個組別的競賽 id
-        $groups = Groups::Where('_id', $req->group_id)->first();
-
         // 由 token 取得學生資料
-        $orders = Users::where('token', $req->token)->first();
+        $orders = Users::where('token', $req->token);
 
-        // 學號
-        $student_id = $orders['idcode'];
+        // 檢測是否有這組 token
+        if ($orders->count() != 1)
+        {
+            $response['status'] = false;
+            $response['msg'] = 3;
+            return json_encode($response);
+        }
 
-        $voting = [
-            'student_id'    => $student_id,
-            'group_id'      => $req->group_id,
-            'activity_id'   => $groups['activity'],
-            'info'          => $orders
-        ];
+        // 取得這個組別的競賽 id
+        $groups = Groups::where('_id', $req->group_id)->first();
 
-        // 目前被載入的活動
-        $thisGroups = Vote::where('student_id', $orders['idcode'])->where('activity_id', $groups['activity']);
+        // 抓出這組 token 的個人資料
+        $userInfo = $orders->first()->toArray();
+
+        // 判斷這組帳號是否已經投過
+        $thisGroups = Vote::where('info.idcode', $userInfo['idcode'])->where('activity_id', $groups['activity']);
         $votingLimit = $thisGroups->count();
-
-
-        // 新增投票資料
-        Vote::create($voting);
-
-        // 更新票數
-        Groups::Where('_id', $req->group_id)->increment('count');
-
-        $response['count']  = 3 - ($votingLimit + 1);
-        $response['status'] = true;
-        $response['token']  = $orders['token'];
-        $response['name']   = $orders['name'];
-        $response['dept']   = $orders['i_DEPT_NAME_C'];
-        
-        return json_encode($response);
-        
 
         // 判斷是否已經投過這組 或 判斷是否對這個活動投超過三次
         if ( $thisGroups->where('group_id', $req->group_id)->count() == 1 || $votingLimit >= 3 )
@@ -138,6 +114,13 @@ class SystemController extends Controller
         }
         else
         {
+            // 欲投票資料
+            $voting = [
+                'group_id'      => $req->group_id,
+                'activity_id'   => $groups['activity'],
+                'info'          => $userInfo
+            ];
+
             // 新增投票資料
             Vote::create($voting);
 
@@ -146,18 +129,13 @@ class SystemController extends Controller
 
             $response['count']  = 3 - ($votingLimit + 1);
             $response['status'] = true;
-            $response['token']  = $orders['token'];
-            $response['name']   = $orders['name'];
-            $response['dept']   = $orders['i_DEPT_NAME_C'];
+            $response['token']  = $userInfo['token'];
+            $response['name']   = $userInfo['name'];
+            $response['dept']   = $userInfo['i_DEPT_NAME_C'];
 
             return json_encode($response);
         }
     }
-
-    public function login_touchtest ()
-    {
-        return $thisGroups = Vote::where('student_id', '10694024')->where('activity_id', '5a36a9422096c809a4004322')->count();
-    } 
 
     // 登入作業
     public function login_handle (Request $request)
