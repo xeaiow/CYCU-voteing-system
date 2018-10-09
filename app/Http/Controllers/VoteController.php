@@ -7,17 +7,9 @@ use App\Activity;
 use App\Groups;
 use App\Vote;
 use App\Users;
-use Redirect;
-use Session;
 
 class VoteController extends Controller
 {
-    // 活動個別資訊
-    public function activity_content ()
-    {
-        return view('activity.content');
-    }
-
     // 取得所有可投票的活動
     public function get_activity ()
     {
@@ -35,8 +27,18 @@ class VoteController extends Controller
     // 取得指定的競賽資訊
     public function get_activity_info (Request $request)
     {
-        $activity = Groups::find($request->id);
-        echo Activity::find($activity['activity']);
+        $activity = Groups::where('_id', $request->id);
+        
+        if ($activity->count() == 0)
+        {
+            $response['status'] = false;
+            return json_encode($response);
+        }
+
+        $response['result'] = Activity::where('_id', $activity->first()['activity'])->first(['title', 'description', 'voter', 'img']);
+        $response['status'] = true;
+
+        return json_encode($response);
     }
 
     // 取得組別資訊
@@ -48,15 +50,16 @@ class VoteController extends Controller
         
         if ($activity->count() == 1)
         {
-            $response['activity']   = $activity->first();
-            $response['groups']     = Groups::Where('activity', $request->id)->get();
-            $response['message']    = false;
+            $response['activity']   = $activity->first(['title', 'description', 'img']);
+            $response['groups']     = Groups::Where('activity', $request->id)->get(['activity', 'groups', 'description', 'photo', 'img']);
+            $response['status'] = true;
+            
             return json_encode($response);
         }
 
-        $response['message'] = true;
+        $response['status'] = false;
 
-        echo json_encode($response);
+        return json_encode($response);
     }
 
     // 取得前三名的組別
@@ -88,13 +91,7 @@ class VoteController extends Controller
 
         $finished = Activity::where('_id', $getGroupsInfo['activity'])->where('started', '<=', $today)->where('deadline', '>=', $today)->count();
 
-        $fakerData = Users::where('idcode', $request->username)->where('token', $request->token)->count();
-
-        if ($fakerData == 0)
-        {
-            $response['status'] = false;
-            return json_encode($response);
-        }
+        //$fakerData = Users::where('idcode', $request->username)->where('token', $request->token)->count();
 
         // 判斷該使用者是否已經投過此組，或投過三次該活動
         $voteLimit = Vote::where('idcode', $request->username)->where('activity_id', $getGroupsInfo['activity']);
@@ -121,37 +118,5 @@ class VoteController extends Controller
         $response['status'] = false;
 
         echo json_encode($response);
-    }
-
-    // 確定投票
-    public function voting_handle (Request $request)
-    {
-        $group_id       = $request->id;
-        $student_id     = Session::get('username');
-
-        $groups         = Groups::Where('_id', $group_id)->first();
-
-        $isExists       = Vote::Where('student_id', Session::get('username'))->Where('activity_id', $groups['activity']);
-
-        if ($isExists->count() == 0)
-        {
-            $voting = [
-                'student_id'    => $student_id,
-                'group_id'      => $group_id,
-                'activity_id'   => $groups['activity']
-            ];
-
-            Vote::create($voting);
-
-            // 更新票數
-            Groups::Where('_id', $group_id)->increment('count');
-
-            $response['status'] = true;
-
-            return json_encode($response);
-        }
-
-        $response['status'] = false;
-        return json_encode($response);
     }
 }

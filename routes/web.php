@@ -1,5 +1,7 @@
 <?php
 
+                        /* Vote */
+
 Route::get('/activity/get', 'VoteController@get_activity');
 
 Route::get('/finished_activity/get', 'VoteController@get_finished_activity');
@@ -14,10 +16,14 @@ Route::get('/groups/top/{id}', 'VoteController@get_groups_top');
 
 Route::post('/group/info', 'VoteController@get_group_info');
 
+                        /* System */
+
 Route::post('/api/loginitouch', 'SystemController@login_touch');
 
 Route::post('/api/voting', 'SystemController@voting');
 
+
+                        /* Pineapple */
 Route::post('/activity/create', 'PineappleController@activity_create');
 
 Route::post('/image/upload', 'PineappleController@upload_image');
@@ -25,12 +31,6 @@ Route::post('/image/upload', 'PineappleController@upload_image');
 Route::post('/pineapple/login/handle', 'PineappleController@login_handle');
 
 Route::get('/pineapple/login/status', 'PineappleController@login_status');
-
-Route::group(['prefix' => '/', 'middleware' => 'isLoginMiddleware'], function () {
-
-    Route::get('/voting/{id}', 'VoteController@voting_handle');
-    Route::get('/logout', 'SystemController@logout_handle');
-});
 
 Route::group(['prefix' => '/', 'middleware' => 'ManagerisLoginMiddleware'], function () {
     

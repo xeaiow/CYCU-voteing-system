@@ -20,11 +20,9 @@ const vueImgConfig = {
 
 Vue.use(VueImg, vueImgConfig);
 
-import Example from '../components/Example'
-import About from '../components/About'
+
 import Activity from '../components/Activity'
 import ActivityId from '../components/ActivityId'
-import ActivityLists from '../components/ActivityLists'
 import ActivityIdGroup from '../components/ActivityIdGroup'
 import Login from '../components/Login'
 import finish from '../components/finish';
@@ -34,6 +32,7 @@ import GroupsCreate from '../components/manager/GroupsCreate';
 import PineappleLogin from '../components/manager/PineappleLogin';
 import ManagerActivityLists from '../components/manager/ActivityLists';
 import PineappleGroups from '../components/manager/PineappleGroups';
+import NotFound from '../components/404';
 
 
 export default new Router({
@@ -41,14 +40,6 @@ export default new Router({
     routes: [{
             path: '/',
             component: Activity
-        },
-        {
-            path: '/login',
-            component: Login
-        },
-        {
-            path: '/about',
-            component: About
         },
         {
             path: '/finished',
@@ -59,13 +50,26 @@ export default new Router({
             component: finishId
         },
         {
-            path: '/activity',
-            component: Example
-        },
-        {
             path: '/activity/:id',
             props: true,
-            component: ActivityId
+            component: ActivityId,
+            beforeEnter: (to, from, next) => {
+
+                let self = this;
+
+                axios.get('//127.0.0.1:8000/groups/info/' + to.params.id).then(response => {
+
+                    if (!response.data.status) {
+                        next({ path: '/404' });
+                    }
+                    else {
+                        next();
+                        this.items = response.data.groups;
+                        this.info = response.data.activity;
+                    }
+                    
+                });
+            }
         },
         {
             path: '/group/:id',
@@ -102,6 +106,10 @@ export default new Router({
         {
             path: '/pineapple/groups/:id',
             component: PineappleGroups
+        },
+        {
+            path: '/404',
+            component: NotFound
         }
     ]
 })
