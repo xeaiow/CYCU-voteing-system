@@ -17,6 +17,12 @@
 
             <!-- 主要容器 -->
             <div class="ts very padded text container">
+
+                <div class="ts fluid stackable buttons margin-navbar">
+                    <button class="ts button" @click="$router.push('/activity/' + activitys._id)">回列表</button>
+                    <button class="ts primary button" @click="votingGroup()" :disabled="vote">投給這組 😃</button>
+                    <button class="ts button" @click="share()">分享到臉書 🙏</button>
+                </div>
                 <!-- 主要信件卡片 -->
                 <div class="ts card">
                     <!-- 頂部內容與標題 -->
@@ -39,10 +45,6 @@
                     <!-- 主要推銷內容 -->
                     <div class="center aligned padded content">
 
-                        <!-- CTA：矚目動作按鈕 -->
-                        <button class="ts positive button" @click="votingGroup()" :disabled="vote">投給這組 😃</button>
-                        <button class="ts inverted button" @click="share()">分享到臉書 🙏</button>
-                        <!-- / CTA：矚目動作按鈕 -->
                         <!-- 區段分隔線 -->
                         <div class="ts section divider"></div>
                         <!-- / 區段分隔線 -->
@@ -60,7 +62,6 @@
                                 <div class="image" v-for="(item, index) in items.photo" :key="index">
                                     <img v-img:name v-bind:src="item" />
                                 </div>
-
                             </div>
                             <!-- / 單個項目 -->
                         </div>
@@ -85,6 +86,7 @@
                 dept: '',
                 items: {},
                 activitys: {},
+                voter: '',
                 vote: false,
                 errorPage: false
             }
@@ -207,9 +209,11 @@
                             switch (res.msg) {
                                 case 1: 
                                     self.errorMessage("你沒機會投了，明年再來", "喔喔");
+                                    self.vote = true;
                                     break;
                                 case 2:
                                     self.errorMessage("投過了喇，還沒睡醒？", "知道了");
+                                    self.vote = true;
                                     break;
                                 case 3:
                                     self.errorMessage("token 失效，請重新登入！", "嗯嗯");
@@ -271,13 +275,18 @@
                 self.items = res.data.info;
                 self.vote = res.data.voting;
             });
+            
+        },
+        created: function () {
+            var self    = this;
 
             axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {
                 if (!response.data.status) {
-                    self.errorPage = true;
-                    return;
+                    self.$router.push({path: '/404'});
                 }
-                this.activitys = response.data;
+                else {
+                    self.activitys = response.data.result;
+                }
             });
         }
     }

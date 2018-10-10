@@ -71,3 +71,8 @@ body {
 [v-cloak] {
     display: none;
 }
+
+.facebook {
+    background-color:#3b5998 !important;
+    color:#E9EAED !important;
+}

@@ -55,8 +55,6 @@ export default new Router({
             component: ActivityId,
             beforeEnter: (to, from, next) => {
 
-                let self = this;
-
                 axios.get('//127.0.0.1:8000/groups/info/' + to.params.id).then(response => {
 
                     if (!response.data.status) {
@@ -66,8 +64,7 @@ export default new Router({
                         next();
                         this.items = response.data.groups;
                         this.info = response.data.activity;
-                    }
-                    
+                    }   
                 });
             }
         },
@@ -110,6 +107,11 @@ export default new Router({
         {
             path: '/404',
             component: NotFound
-        }
+        },
+        {
+            path: '*',
+            name: '/404',
+            component: NotFound
+        },
     ]
 })
