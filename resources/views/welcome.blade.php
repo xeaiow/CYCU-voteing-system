@@ -10,10 +10,6 @@
     <meta property="og:url" content="http://140.135.112.191">
     <meta property="og:image" content="https://i.imgur.com/9PFi6gq.jpg" />
     <meta property="og:description" content="擇你所愛，選你所擇" />
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.28.4/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@7.28.4/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -27,6 +23,8 @@
         <div id="app" v-cloak></div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas-ui/2.3.3/tocas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.28.4/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script>
