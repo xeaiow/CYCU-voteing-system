@@ -274,8 +274,14 @@
 
                 self.items = res.data.info;
                 self.vote = res.data.voting;
-            });
-            
+
+                document.title = res.data.info.groups;
+
+                let metaList = document.getElementsByTagName("META");
+                metaList[4].setAttribute("content", res.data.info.groups);
+                metaList[5].setAttribute("content", res.data.info.img);
+                metaList[5].setAttribute("content", window.location);
+            });            
         },
         created: function () {
             var self    = this;
