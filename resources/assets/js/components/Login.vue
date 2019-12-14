@@ -56,7 +56,7 @@
                 var router = this.$router;
                 var self = this;
 
-                axios.post('//127.0.0.1:8000/login/handle', {
+                axios.post('/login/handle', {
                     username: this.username,
                     password: this.password,
                     level: this.level
@@ -68,7 +68,7 @@
                     
                     if (response.data.login_status != 1 && response.data.login_status != 2)
                     {
-                        self.$swal({
+                        self.swal({
                             title: "驗證失敗！",
                             text: "請確認您的 iTouch 帳密。",
                             type: "error",
@@ -83,7 +83,7 @@
                     level    = response.data.class.substr(-4); 
                     
                     // TODO: 回傳後再更新抓到的學生資料
-                    self.$swal({
+                    self.swal({
                         title: "驗證成功！",
                         text: "可以開始投票了。",
                         type: "success",
@@ -94,12 +94,12 @@
                 });
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('/logout')
                 this.$router.go('/');
             }
         },
         mounted: function () {
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;})
+            axios.get('/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;})
         }
     }
 </script>

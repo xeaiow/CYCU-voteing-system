@@ -41,7 +41,7 @@ class PineappleController extends Controller
         {
             $result[] = json_decode($client->request('POST', 'https://api.imgur.com/3/image', [
                 'headers' => [
-                    'authorization' => 'Client-ID ' . '5f2eaa3314e3d73',
+                    'authorization' => 'Client-ID ' . 'd1b1e90e7c1f0e7',
                     'content-type' => 'application/x-www-form-urlencoded',
                 ],
                 'form_params' => [

@@ -1,9 +1,3 @@
-<style>
-    body {
-        background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-    }
-</style>
-
 <template>
     <div>
         <div class="ui grid">
@@ -30,6 +24,8 @@
 </template>
 
 <script>
+    import SuiVue from 'semantic-ui-vue'
+    import 'semantic-ui-css/semantic.min.css'
     export default {
         data: function () {
             return {
@@ -46,7 +42,7 @@
                 var router = this.$router;
                 var self = this;
 
-                axios.post('//127.0.0.1:8000/pineapple/login/handle', {
+                axios.post('/pineapple/login/handle', {
                     username: this.username,
                     password: this.password,
                 })
@@ -55,7 +51,7 @@
                     // 登入失敗
                     if (response.data == "")
                     {
-                        self.$swal({
+                        swal.fire({
                             title: "驗證失敗！",
                             text: "請確認您的管理帳密。",
                             type: "error",
@@ -63,7 +59,7 @@
                         });
                         return false;
                     }
-                    self.$swal({
+                    swal.fire({
                         title: "驗證成功！",
                         text: "可以開始設定後臺了。",
                         type: "success",
@@ -75,9 +71,6 @@
                     });   
                 });
             },
-        },
-        mounted: function() {
-            
         }
     }
 </script>

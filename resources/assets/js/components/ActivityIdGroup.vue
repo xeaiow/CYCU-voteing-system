@@ -43,7 +43,7 @@
                     <!-- / 特色圖片 -->
 
                     <!-- 主要推銷內容 -->
-                    <div class="center aligned padded content">
+                    <div class="padded content">
 
                         <!-- 區段分隔線 -->
                         <div class="ts section divider"></div>
@@ -53,17 +53,11 @@
                         <p>
                             <a @click="deptLabel(voter)" class="ts horizontal link label" v-for="(voter, index) in activitys.voter" :key="index">{{ voter }}</a>
                         </p>
-
+                        <div class="ts hidden divider"></div>
                         <!-- 特色項目群組 -->
-                        <div class="ts relaxed items">
+                        <div class="ts tiny images">
                             <h3>精彩圖集</h3>
-                            <!-- 單個項目 -->
-                            <div class="item">
-                                <div class="image" v-for="(item, index) in items.photo" :key="index">
-                                    <img v-img:name v-bind:src="item" />
-                                </div>
-                            </div>
-                            <!-- / 單個項目 -->
+                            <img v-for="(item, index) in items.photo" :key="index" v-img:name v-bind:src="item" />
                         </div>
                         <!-- / 特色項目群組 -->
                     </div>
@@ -78,7 +72,33 @@
 
 <script>
     export default {
-
+        metaInfo() {
+            return {
+                title: this.items.groups,
+                meta: [
+                    {
+                        property: 'og:title',
+                        content: this.items.groups,
+                        vmid: 'og:title'
+                    },
+                    {
+                        property: 'og:url',
+                        content: window.location.href,
+                        vmid: 'og:url'
+                    },
+                    {
+                        property: 'og:image',
+                        content: this.items.img,
+                        vmid: 'og:image'
+                    },
+                    {
+                        property: 'og:description',
+                        content: '擇你所愛，選你所擇',
+                        vmid: 'og:description'
+                    }
+                ]
+            }
+        },
         data: function () {
             return {
                 token: '',
@@ -93,7 +113,7 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('/logout')
                 this.$router.go('/');
             },
             inputItouch: function () {
@@ -109,14 +129,15 @@
                 }).queue([
                 {
                     title: '身分驗證',
-                    text: '請輸入您的 i-Touch 帳號'
-                },
-                '輸入您 i-Touch 密碼',
-                ]).then((result) => {
+                    text: '輸入您的愛觸摸帳號'
+                },{
+                    title: '輸入您的密碼',
+                    inputType: "password"
+                }]).then((result) => {
                     
                     if (result.value) {
-                        axios.post('//127.0.0.1:8000/api/loginitouch', {
-                            userId: result.value[0],
+                        axios.post('api/logindemo', {
+                            username: result.value[0],
                             password: result.value[1]
                         })
                         .then(function (response) {
@@ -126,7 +147,7 @@
                             if (!res.status) {
                                 switch (res.msg) {
                                     case 1:
-                                        self.errorMessage("偵測到沒投票的權利，你一定是邊緣人", "我是邊緣人QQ");
+                                        self.errorMessage("偵測到沒投票的權利，你一定是系邊", "我是邊緣人QQ");
                                         break;
                                     default:
                                         swal({
@@ -154,12 +175,12 @@
                 })
             },
             deptLabel: function (dept) {
-                swal({
+                swal.fire({
                     position: 'top-end',
-                    type: 'error',
-                    title: '啊就' + dept + '有什麼好點的！',
+                    type: 'info',
+                    title: `你點擊了${dept}，但不會因此變成學霸`,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2000
                 })
             },
             votingGroup: function () {
@@ -186,7 +207,7 @@
 
                         let group_id = self.$route.params.id;
 
-                        axios.post('//127.0.0.1:8000/api/voting', {
+                        axios.post('api/voting', {
                             token: sessionStorage.getItem('token'),
                             group_id: group_id
                         })
@@ -241,7 +262,7 @@
                 });
             },
             share: function () {
-                window.open('https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=' + window.location.href + '&display=popup&ref=plugin&src=share_button', '分享這組', 'height=400, width=600');
+                window.open('https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u=' + window.location.href + '/&display=popup&ref=plugin&src=share_button', '分享這組', 'height=400, width=600');
             },
             logout: function () {
                 sessionStorage.clear();
@@ -265,7 +286,7 @@
                 this.name = sessionStorage.getItem('name');
             }
 
-            axios.post('//127.0.0.1:8000/group/info',{
+            axios.post('/group/info',{
                 id: this.$route.params.id,
                 token: sessionStorage.getItem('token'),
                 username: sessionStorage.getItem('username')
@@ -286,9 +307,9 @@
         created: function () {
             var self    = this;
 
-            axios.get('//127.0.0.1:8000/activity/info/' + this.$route.params.id).then(response => {
+            axios.get('/activity/info/' + this.$route.params.id).then(response => {
                 if (!response.data.status) {
-                    self.$router.push({path: '/404'});
+                    self.$router.push({path: '404'});
                 }
                 else {
                     self.activitys = response.data.result;

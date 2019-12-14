@@ -9,17 +9,17 @@
         </div>
         
 
-        <div class="ui grid cycuvote-container">
+        <div class="ui grid">
             <div class="three wide column">
                 <!-- MENU -->
-                <div class="ui c vertical menu">
+                <div class="ui vertical menu">
                     <a class="active item" @click="$router.push('/pineapple')"><i class="icon plus"></i>新增</a>
                     <a class="item" @click="$router.push('/pineapple/activity')"><i class="icon tasks"></i>列表</a>
                 </div>
                 
                 <!-- MENU_END -->
             </div>
-            <div class="thirteen wide column">
+            <div class="twelve wide column">
                 <div class="ui segment">
 
                     <h4 class="ui horizontal divider header">1. 活動海報</h4>
@@ -88,8 +88,10 @@
 
 </template>
 <script>
-    import myDatepicker from 'vue-datepicker';
-
+    import myDatepicker from 'vue-datepicker'
+    import SuiVue from 'semantic-ui-vue'
+    import 'semantic-ui-css/semantic.min.css'
+    Vue.use(SuiVue)
     export default {
         data: function () {
             return {
@@ -180,7 +182,7 @@
 
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/activity/create',
+                    url: '/activity/create',
                     data: {
                         title: this.title,
                         description: this.description,
@@ -195,7 +197,7 @@
                     
                     let link = response.data;
 
-                    self.$swal({
+                    swal.fire({
                         title: "新增成功！",
                         text: "請接續新增組別。",
                         confirmButtonText: "知道了",
@@ -224,9 +226,9 @@
                     var self = this;
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '/image/upload',
                         headers: {
-                            'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                            'X-CSRF-Token': document.getElementsByTagName('meta')[3].getAttribute('content')
                         },
                         data: {
                             userImage: this.image,
@@ -243,7 +245,7 @@
                 this.image = '';
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('/pineapple/logout')
                 this.$router.go('/');
             }
         },
@@ -252,7 +254,7 @@
             var self = this;
             var router = this.$router;
 
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

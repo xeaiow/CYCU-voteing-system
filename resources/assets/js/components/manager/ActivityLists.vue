@@ -22,7 +22,7 @@
                 <div class="ui stackable three column grid">
                     <div class="column" v-for="(item, index) in items" :key="index">
                         <div class="ui cards stackable">
-                            <div class="card pointer" @click="$router.push({path:'groups/create/'+ item._id})">
+                            <div class="card pointer focus" @click="$router.push({path:'groups/create/'+ item._id})">
                                 <div class="content center aligned">
                                     {{ item.title }}
                                 </div>
@@ -49,7 +49,7 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('/pineapple/logout')
                 this.$router.go('/');
             }
         },
@@ -58,9 +58,9 @@
             var self = this;
             var router = this.$router;
 
-            axios.get('//127.0.0.1:8000/pineapple/activity/1/get').then(response => {this.items = response.data})
+            axios.get('/pineapple/activity/1/get').then(response => {this.items = response.data})
             
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

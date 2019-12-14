@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="image" @click="$router.push({path:'/group/' + item._id})">
+                        <div class="image" @click="$router.push({path:'/team/' + item._id})">
                             <img v-bind:src="item.img">
                         </div>
                     </div>
@@ -80,13 +80,13 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('/logout')
                 this.$router.go('/');
             }
         },
         mounted: function() {
-            axios.get('//127.0.0.1:8000/groups/top/' + this.$route.params.id).then(response => {this.items = response.data.groups;this.info = response.data.activity;this.message = response.data.message;})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
+            axios.get('/groups/top/' + this.$route.params.id).then(response => {this.items = response.data.groups;this.info = response.data.activity;this.message = response.data.message;})
+            axios.get('/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
         }
     }
 </script>

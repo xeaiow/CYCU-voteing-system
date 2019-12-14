@@ -1,35 +1,21 @@
 <template>
     <div>
-        
-        <!-- 標題板岩 -->
-        <div class="ts padded heading slate">
-            <div class="ts container">
-                <span class="header">中原資管專題投票系統</span>
-                <span class="description">擇你所愛，選你所擇</span>
-            </div>
-        </div>
-        <!-- / 標題板岩 -->
-
-        <!-- 主要容器 -->
         <div class="ts padded container">
-
             <div class="ts hidden divider"></div>
-                
             <div class="ts secondary menu">
                 <div class="header item" @click="$router.push('/')">活動列表</div>
-                <a class="item" @click="$router.push('/finished')">公佈欄</a>
+                <a class="item" @click="$router.push('/done')">公佈欄</a>
             </div>
 
             <!-- 活動卡片群組 -->
-            <div class="ts three cards">
-                <div class="ts card" v-for="(item, index) in items" :key="index">
-                    <div class="image" @click="$router.push({path:'activity/'+ item._id})">
+            <div class="ts three stackable cards">
+                <div class="ts card focus" @click="$router.push({path:`/activity/${item._id}`})" v-for="(item, index) in items" :key="index">
+                    <div class="image">
                         <img v-bind:src="item.img">
                     </div>
                     <div class="content">
                         <div class="header">
                             <h3 class="ts center aligned header">{{ item.title }}</h3>
-                            
                         </div>
                         <div class="description">
                             {{ item.description }}
@@ -64,6 +50,31 @@
 
 <script>
     export default {
+        metaInfo: {
+            title: '中原大學資訊管理學系投票系統',
+            meta: [
+                {
+                    property: 'og:title',
+                    content: '中原大學資訊管理學系投票系統',
+                    vmid: 'og:title'
+                },
+                {
+                    property: 'og:url',
+                    content: window.location.href,
+                    vmid: 'og:url'
+                },
+                {
+                    property: 'og:image',
+                    content: 'https://i.imgur.com/OjrlSUW.png',
+                    vmid: 'og:image'
+                },
+                {
+                    property: 'og:description',
+                    content: '擇你所愛，選你所擇',
+                    vmid: 'og:description'
+                }
+            ]
+        },
         data: function () {
             return {
                 items:[],
@@ -74,13 +85,21 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
-                this.$router.go('/');
+                axios.get('/logout').then(response => 
+                    this.$router.go('/')
+                )
             }
         },
-        mounted: function () {
-            axios.get('//127.0.0.1:8000/activity/get').then(response => {this.items = response.data})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username;this.level = response.data.level;})
+        created: function () {
+            axios.get('/activity/get').then(response => 
+                this.items = response.data
+            )
+
+            axios.get('/login/status').then(response => {
+                this.token = response.data.token
+                this.username = response.data.username
+                this.level = response.data.level
+            })
         }
     }
 </script>

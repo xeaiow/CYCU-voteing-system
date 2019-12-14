@@ -19,6 +19,7 @@ Route::post('/group/info', 'VoteController@get_group_info');
                         /* System */
 
 Route::post('/api/loginitouch', 'SystemController@login_touch');
+Route::post('/api/logindemo', 'SystemController@login_demo');
 
 Route::post('/api/voting', 'SystemController@voting');
 

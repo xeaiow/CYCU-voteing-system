@@ -1,8 +1,7 @@
 <template>
     <div>
-
         <div class="ui top fixed menu inverted navbar">
-            <a class="item" @click="$router.push('/pineapple')">中原資管投票管理後臺</a>
+            <a class="item" @click="$router.push('/voting/pineapple')">中原資管投票管理後臺</a>
             <div class="right menu">
                 <a class="item font-style">{{ this.username }} 您好</a>
                 <a class="item font-style" v-if="token" @click="logout">登出</a>
@@ -14,7 +13,7 @@
                 
                 <h2 class="ui header">
                     <i class="inbox icon"></i>
-                    <div class="content">組別資料 <a v-bind:href="'/pineapple/groups/create/' + other_groups[0].activity">[進入此活動]</a></div>
+                    <div class="content">組別資料 <a v-bind:href="'/voting/pineapple/groups/create/' + other_groups[0].activity">[進入此活動]</a></div>
                 </h2>
                 <div class="ui segment">
 
@@ -73,9 +72,9 @@
 
                     <div class="ui segment">
                         <div class="ui list">
-                            <div class="item" v-for="(item, index) in other_groups" :key="index" @click="$router.push('/pineapple/groups/' + item._id)">
+                            <div class="item" v-for="(item, index) in other_groups" :key="index" @click="$router.push('/voting/pineapple/groups/' + item._id)">
                                 <div class="content">
-                                    <h2 class="ui header"><a v-bind:href="'/pineapple/groups/' + item._id">{{ item.groups }}</a></h2>
+                                    <h2 class="ui header"><a v-bind:href="'/voting/pineapple/groups/' + item._id">{{ item.groups }}</a></h2>
                                 </div>
                             </div>
                         </div>
@@ -84,9 +83,6 @@
                 </div>
             </div>
         <!-- RIGHT_END -->
-
-        </div>
-
     </div>
 </template>
 <script>
@@ -101,13 +97,13 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('/voting/pineapple/logout')
                 this.$router.go('/');
             },
             edit: function () {
 
                 var self = this;
-                axios.post('//127.0.0.1:8000/pineapple/groups/update/set', {
+                axios.post('/voting/pineapple/groups/update/set', {
                     id: this.$route.params.id,
                     groups: this.info.groups,
                     img: this.info.img,
@@ -154,7 +150,7 @@
 
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '/voting/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -218,7 +214,7 @@
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/image/upload',
+                    url: '/voting/image/upload',
                     headers: {
                         'X-CSRF-Token': $('meta[name=_token]').attr('content')
                     },
@@ -249,15 +245,15 @@
             var self = this;
             var router  = this.$router;
 
-            axios.get('//127.0.0.1:8000/pineapple/groups/' + this.$route.params.id + '/get')
+            axios.get('/voting/pineapple/groups/' + this.$route.params.id + '/get')
             .then(function (response) {
 
                 self.info = response.data;
 
-                axios.get('//127.0.0.1:8000/pineapple/activity/groups/' + response.data.activity + '/get').then(response => {self.other_groups = response.data})
+                axios.get('/voting/pineapple/activity/groups/' + response.data.activity + '/get').then(response => {self.other_groups = response.data})
             });
 
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('/voting/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

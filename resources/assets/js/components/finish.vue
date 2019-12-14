@@ -1,14 +1,6 @@
 <template>
 
     <div>
-        <!-- 標題板岩 -->
-        <div class="ts padded heading slate">
-            <div class="ts container">
-                <span class="header">中原資管專題投票系統</span>
-                <span class="description">擇你所愛，選你所擇</span>
-            </div>
-        </div>
-        <!-- / 標題板岩 -->
 
         <!-- 主要容器 -->
         <div class="ts padded container">
@@ -17,12 +9,12 @@
                 
             <div class="ts secondary menu">
                 <a class="item" @click="$router.push('/')">活動列表</a>
-                <div class="header item" @click="$router.push('/finished')">公佈欄</div>
+                <div class="header item" @click="$router.push('/done')">公佈欄</div>
             </div>
 
             <!-- 活動卡片群組 -->
             <div class="ts three cards">
-                <div class="ts card" v-for="(item, index) in items" :key="index" @click="$router.push({path: 'finished/' + item._id})">
+                <div class="ts card focus" v-for="(item, index) in items" :key="index" @click="$router.push({path: '/done/' + item._id})">
                     <div class="image">
                         <img v-bind:src="item.img">
                     </div>
@@ -68,13 +60,18 @@
         },
         methods: {
             logout: function () {
-                axios.get('//127.0.0.1:8000/logout')
+                axios.get('/logout')
                 this.$router.go('/');
             }
         },
-        mounted: function () {
-            axios.get('//127.0.0.1:8000/finished_activity/get').then(response => {this.items = response.data;})
-            axios.get('//127.0.0.1:8000/login/status').then(response => {this.token = response.data.token;this.username = response.data.username})
+        created: function () {
+            axios.get('/finished_activity/get').then(response => 
+                this.items = response.data
+            )
+            axios.get('/login/status').then(response => {
+                this.token = response.data.token;
+                this.username = response.data.username
+            })
         }
     }
 </script>

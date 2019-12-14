@@ -8,10 +8,37 @@ use Session;
 use App\Users;
 use App\Groups;
 use App\Vote;
+use App\Account;
 
 
 class SystemController extends Controller
 {
+    public function login_demo (Request $request)
+    {
+        $username = $request->username;
+        $getAccount = Account::where('username', $request->username)->where('password', $request->password);
+        
+        if ($getAccount->count() == 1) {
+
+            $token = bin2hex(random_bytes(32));
+
+            $userInfo = $getAccount->first(['name', 'dept']);
+
+            Account::where('username', $username)->update(['token'=> $token]);
+
+            $response['name']       = $userInfo['name'];
+            $response['username']   = $username;
+            $response['dept']       = $userInfo['dept'];
+            $response['token']      = $token;
+            $response['status'] = true;
+        }
+        else
+        {
+            $response['status'] = false;
+        }
+        return json_encode($response);
+    }
+
     // 確認 iTouch 身分
     public function login_touch (Request $request)
     {
@@ -106,7 +133,7 @@ class SystemController extends Controller
         }
 
         // 由 token 取得學生資料
-        $orders = Users::where('token', $req->token);
+        $orders = Account::where('token', $req->token);
 
         // 檢測是否有這組 token
         if ($orders->count() != 1)
@@ -123,7 +150,7 @@ class SystemController extends Controller
         $userInfo = $orders->first()->toArray();
 
         // 判斷這組帳號是否已經投過
-        $thisGroups = Vote::where('idcode', $userInfo['idcode'])->where('activity_id', $groups['activity']);
+        $thisGroups = Vote::where('idcode', $userInfo['username'])->where('activity_id', $groups['activity']);
         $votingLimit = $thisGroups->count();
 
         // 判斷是否已經投過這組 或 判斷是否對這個活動投超過三次
@@ -152,7 +179,7 @@ class SystemController extends Controller
             'group_id'      => $req->group_id,
             'activity_id'   => $groups['activity'],
             'id'            => $userInfo['_id'],
-            'idcode'        => $userInfo['idcode'],
+            'idcode'        => $userInfo['username'],
             'token'         => $userInfo['token']
         ];
 
@@ -166,7 +193,7 @@ class SystemController extends Controller
         $response['status'] = true;
         $response['token']  = $userInfo['token'];
         $response['name']   = $userInfo['name'];
-        $response['dept']   = $userInfo['i_DEPT_NAME_C'];
+        $response['dept']   = $userInfo['dept'];
 
         return json_encode($response);
     }

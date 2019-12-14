@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div class="ui grid cycuvote-container">
+        <div class="ui grid">
 
             <!-- LEFT -->
             <div class="eight wide column">
@@ -36,18 +36,18 @@
                     <p>{{ info.started }} ~ {{ info.deadline }}</p>
 
                     <div class="ui large header">參與群組</div>
-                    <p>
+                    
                         <div class="ui list">
                             <div class="item" v-for="(item, index) in info.voter" :key="index">{{ item }}</div>
                         </div>
-                    </p>
+                    
 
                     <h4 class="ui horizontal divider header margin-20">所有組別</h4>
-                    <p>
+                    
                         <div class="ui list">
                             <div class="item" @click="$router.push('/pineapple/groups/' + item._id)" v-for="(item, index) in groups_info" :key="index">{{ item.groups }}</div>
                         </div>
-                    </p>
+                    
                     
                 </div>
 
@@ -89,11 +89,11 @@
                     </div>
 
                     <h4 class="ui horizontal divider header margin-20">參與群組</h4>
-                    <p>
+                    
                         <div class="ui list">
                             <div class="item" v-for="(item, index) in info.voter" :key="index">{{ item }}</div>
                         </div>
-                    </p>
+                    
 
                     <button class="ui button green fluid margin-20" @click="update_activity">更新</button>
 
@@ -181,7 +181,8 @@
 <script>
 
     import myDatepicker from 'vue-datepicker';
-
+    import SuiVue from 'semantic-ui-vue'
+    import 'semantic-ui-css/semantic.min.css'
     export default {
         data: function () {
             return {
@@ -269,7 +270,7 @@
             },
             uploadImage: function () {
 
-                this.$notify({
+                swal.fire({
                     group: 'foo',
                     title: '上傳中',
                     text: '請耐心等待上傳'
@@ -278,9 +279,9 @@
                 var self = this;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/image/upload',
+                    url: '/image/upload',
                     headers: {
-                        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                        'X-CSRF-Token': document.getElementsByTagName('meta')[3].getAttribute('content')
                     },
                     data: {
                         userImage: this.image_tmp,
@@ -329,7 +330,7 @@
 
                     axios({
                         method: 'post',
-                        url: '//127.0.0.1:8000/image/upload',
+                        url: '/image/upload',
                         headers: {
                             'X-CSRF-Token': $('meta[name=_token]').attr('content')
                         },
@@ -352,9 +353,9 @@
                 var router  = this.$router;
                 axios({
                     method: 'post',
-                    url: '//127.0.0.1:8000/pineapple/groups/create',
+                    url: '/pineapple/groups/create',
                     headers: {
-                        'X-CSRF-Token': $('meta[name=_token]').attr('content')
+                        'X-CSRF-Token': document.getElementsByTagName('meta')[3].getAttribute('content')
                     },
                     data: {
                         activity: this.$route.params.id,
@@ -383,12 +384,12 @@
                 this.edit_open = true;
             },
             logout: function () {
-                axios.get('//127.0.0.1:8000/pineapple/logout')
+                axios.get('/pineapple/logout')
                 this.$router.go('/');
             },
             update_activity: function () {
 
-                axios.post('//127.0.0.1:8000/pineapple/activity/update/set', {
+                axios.post('/pineapple/activity/update/set', {
                     title: this.info.title,
                     description: this.info.description,
                     started: this.started.time,
@@ -400,16 +401,16 @@
                 });
             }
         },
-        mounted: function () {
+        created: function () {
 
             var self = this;
             var router  = this.$router;
             
-            axios.get('//127.0.0.1:8000/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data});
+            axios.get('/pineapple/activity/create/' + this.$route.params.id + '/get').then(response => {this.info = response.data});
             
-            axios.get('//127.0.0.1:8000/pineapple/activity/groups/' + this.$route.params.id + '/get').then(response => {this.groups_info = response.data})
+            axios.get('/pineapple/activity/groups/' + this.$route.params.id + '/get').then(response => {this.groups_info = response.data})
 
-            axios.get('//127.0.0.1:8000/pineapple/login/status')
+            axios.get('/pineapple/login/status')
             .then(function (res) {
                 
                 self.token = res.data.token;

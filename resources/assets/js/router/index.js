@@ -1,87 +1,46 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueImg from 'v-img'
-import SuiVue from 'semantic-ui-vue'
-import Notifications from 'vue-notification'
 
-Vue.use(Notifications)
-Vue.use(SuiVue);
-Vue.use(Router)
-
-const vueImgConfig = {
-    // Use `alt` attribute as gallery slide title
-    altAsTitle: true,
-    // Display 'download' button near 'close' that opens source image in new tab
-    sourceButton: false,
-    // Event listener to open gallery will be applied to <img> element
-    openOn: 'click',
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
 }
 
-
-Vue.use(VueImg, vueImgConfig);
-
-
-import Activity from '../components/Activity'
-import ActivityId from '../components/ActivityId'
-import ActivityIdGroup from '../components/ActivityIdGroup'
-import Login from '../components/Login'
-import finish from '../components/finish';
-import finishId from '../components/finishId';
-import Pineapple from '../components/manager/Pineapple';
-import GroupsCreate from '../components/manager/GroupsCreate';
-import PineappleLogin from '../components/manager/PineappleLogin';
-import ManagerActivityLists from '../components/manager/ActivityLists';
-import PineappleGroups from '../components/manager/PineappleGroups';
-import NotFound from '../components/404';
-
+Vue.use(Router)
 
 export default new Router({
     mode: 'history',
     routes: [{
             path: '/',
-            component: Activity
+            component: () => import('../components/Activity.vue')
         },
         {
-            path: '/finished',
-            component: finish
+            path: '/done',
+            component: () => import('../components/finish.vue')
         },
         {
-            path: '/finished/:id',
-            component: finishId
+            path: '/done/:id',
+            component: () => import('../components/finishId.vue')
         },
         {
             path: '/activity/:id',
             props: true,
-            component: ActivityId,
-            beforeEnter: (to, from, next) => {
-
-                axios.get('//127.0.0.1:8000/groups/info/' + to.params.id).then(response => {
-
-                    if (!response.data.status) {
-                        next({ path: '/404' });
-                    }
-                    else {
-                        next();
-                        this.items = response.data.groups;
-                        this.info = response.data.activity;
-                    }   
-                });
-            }
+            component: () => import('../components/ActivityId.vue')
         },
         {
-            path: '/group/:id',
+            path: '/team/:id',
             props: true,
-            component: ActivityIdGroup
+            component: () => import('../components/ActivityIdGroup.vue')
         },
         {
             path: '/pineapple/login',
-            component: PineappleLogin
+            component: () => import('../components/manager/PineappleLogin.vue')
         },
         {
             path: '/pineapple',
-            component: Pineapple,
+            component: () => import('../components/manager/Pineapple.vue'),
             beforeEnter: (to, from, next) => {
-                axios.get('//127.0.0.1:8000/pineapple/login/status').then(res => {
+                axios.get('/pineapple/login/status').then(res => {
 
                     if (res.data != "") {
                         next();
@@ -94,24 +53,19 @@ export default new Router({
         {
             path: '/pineapple/groups/create/:id',
             props: true,
-            component: GroupsCreate
+            component: () => import('../components/manager/GroupsCreate.vue')
         },
         {
             path: '/pineapple/activity',
-            component: ManagerActivityLists
+            component: () => import('../components/manager/ActivityLists.vue')
         },
         {
             path: '/pineapple/groups/:id',
-            component: PineappleGroups
+            component: () => import('../components/manager/PineappleGroups.vue')
         },
         {
             path: '/404',
-            component: NotFound
-        },
-        {
-            path: '*',
-            name: '/404',
-            component: NotFound
+            component: () => import('../components/404.vue')
         },
     ]
 })

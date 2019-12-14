@@ -1,1 +1,90 @@
-body{font-family:\\5FAE\8EDF\6B63\9ED1\9AD4!important;background-color:#fff;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23e9eaed' fill-opacity='.4' fill-rule='evenodd'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/svg%3E")}.navbar{height:50px}.font-style{font-family:\\5FAE\8EDF\6B63\9ED1\9AD4!important}::-webkit-scrollbar{width:0}.cycuvote-theme{background-color:#2e7866!important}.cycuvote-menu{height:50px}.cycuvote-container{margin-top:60px!important}.pointer{cursor:pointer}.project-content-text{font-size:18px!important;line-height:40px}.margin-80{margin-top:80px}.margin-20{margin-top:40px!important}.ui .list .item{cursor:pointer}.margin-navbar{margin-top:20px}.content-v-img{min-height:100%}.hover-pointer{cursor:pointer}[v-cloak]{display:none}.facebook{background-color:#3b5998!important;color:#e9eaed!important}
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:300&display=swap');
+
+body {
+	font-family: 'Noto Sans TC', sans-serif !important;
+	background-image: url('https://i.imgur.com/lLrUfiq.png') !important;
+}
+
+.navbar {
+	height: 50px
+}
+
+.font-family, .button, h3 {
+	font-family: 'Noto Sans TC', sans-serif !important;
+}
+
+::-webkit-scrollbar {
+	width: 0
+}
+
+.cycuvote-theme {
+	background-color: #2e7866!important
+}
+
+.cycuvote-menu {
+	height: 50px
+}
+
+.cycuvote-container {
+	margin-top: 60px!important
+}
+
+.pointer {
+	cursor: pointer
+}
+
+.project-content-text {
+	font-size: 18px!important;
+	line-height: 40px
+}
+
+.margin-80 {
+	margin-top: 80px
+}
+
+.margin-20 {
+	margin-top: 40px!important
+}
+
+.ui .list .item {
+	cursor: pointer
+}
+
+.margin-navbar {
+	margin-top: 20px
+}
+
+.content-v-img {
+	min-height: 100%
+}
+
+.hover-pointer {
+	cursor: pointer
+}
+
+[v-cloak] {
+	display: none
+}
+
+.facebook {
+	background-color: #3b5998!important;
+	color: #e9eaed!important
+}
+
+.focus {
+    cursor: pointer;
+}
+
+.banner {
+	background-image: url('https://i.imgur.com/wSw1qXW.png') !important;
+	color: #E9EAED !important;
+}
+
+.light {
+	color: #E9EAED !important;
+}
+
+.primary {
+	background-color: #2C355D !important;
+	border-color: #2C355D !important;
+}
