@@ -14,7 +14,7 @@
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^5.1.1",
     "droply": "^0.0.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.4.0",
     "laravel-mix": "^4.0.0",
     "lodash": "^4.17.15",
     "resolve-url-loader": "^3.1.0",
