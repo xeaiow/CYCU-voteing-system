@@ -16,7 +16,7 @@
     "droply": "^0.0.3",
     "jquery": "^3.4.1",
     "laravel-mix": "^4.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "resolve-url-loader": "^3.1.0",
     "sass": "^1.23.7",
     "sass-loader": "^7.3.1",
